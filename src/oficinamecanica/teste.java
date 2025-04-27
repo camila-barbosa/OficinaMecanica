@@ -5,7 +5,8 @@
 package oficinamecanica;
 
 /**
- *
+ * essa classe é um teste
+ * alo
  * @author marcos_miller
  */
 public class teste {
