@@ -9,5 +9,6 @@ package oficinamecanica;
  * @author marcos_miller
  */
 public class teste {
-    
+    //uma linha de comentario
+    //mais um comentario
 }
