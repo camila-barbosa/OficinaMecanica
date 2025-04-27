@@ -12,5 +12,6 @@ package oficinamecanica;
 public class teste {
     //uma linha de comentario
     //camila maravilhosa
+    //aqui
     //mais um comentario
 }
