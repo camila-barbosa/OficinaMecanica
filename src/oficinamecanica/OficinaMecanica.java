@@ -5,16 +5,20 @@
 package oficinamecanica;
 
 /**
- *
+ * 
  * @author marcos_miller
  */
+
+
+/**
+ * Essa é a classe principal do sistema
+ * @author barbo
+ */
+
 public class OficinaMecanica {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        // TODO code application logic here
+ 
     }
     
 }

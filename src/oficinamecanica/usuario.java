@@ -5,14 +5,9 @@
 package oficinamecanica;
 
 /**
- * essa classe é um teste
- * alo
- * @author marcos_miller
+ * Essa classe é para administrar os usuários
+ * @author barbo
  */
-public class teste {
-    //uma linha de comentario
-    //camila maravilhosa
-    //aqui
-    //mais um comentario
-    //dds
+public class usuario {
+    
 }
