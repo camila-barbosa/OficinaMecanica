@@ -5,9 +5,12 @@
 package oficinamecanica;
 
 /**
- *
+ *Essa será nossa classe Main
  * @author barbo
  */
 public class Pricipal {
     
+    public static void main(String[] args) {
+ 
+    }
 }

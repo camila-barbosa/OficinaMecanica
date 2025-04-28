@@ -8,7 +8,7 @@ package oficinamecanica;
  * 
  * @author marcos_miller
  */
-
+import java.util.List;
 
 /**
  * Essa é a classe principal do sistema
@@ -17,8 +17,6 @@ package oficinamecanica;
 
 public class OficinaMecanica {
 
-    public static void main(String[] args) {
- 
-    }
+    
     
 }
