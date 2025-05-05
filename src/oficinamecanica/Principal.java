@@ -4,13 +4,17 @@
  */
 package oficinamecanica;
 
+import view.MenuEstoque;
+
 /**
  *Essa será nossa classe Main
  * @author Camila
  */
+
 public class Principal {
-    
+
     public static void main(String[] args) {
- 
+        MenuEstoque menu = new MenuEstoque();
+        menu.exibirMenu();
     }
 }
