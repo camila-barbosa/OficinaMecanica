@@ -6,9 +6,9 @@ package oficinamecanica;
 
 /**
  *Essa será nossa classe Main
- * @author barbo
+ * @author Camila
  */
-public class Pricipal {
+public class Principal {
     
     public static void main(String[] args) {
  
