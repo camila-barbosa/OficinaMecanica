@@ -9,9 +9,7 @@ package oficinamecanica;
  *
  * @author barbo
  */
-
-
-public class usuario {
+public class Usuario {
 
     private String nome;
     private String cpf;
@@ -21,7 +19,7 @@ public class usuario {
     private String senha;
 
     //construtor
-    public usuario(String nome, String cpf, String endereco, String email, String telefone, String senha) {
+    public Usuario(String nome, String cpf, String endereco, String email, String telefone, String senha) {
         this.nome = nome;
         setCpf(cpf);
         this.endereco = endereco;
@@ -93,15 +91,14 @@ public class usuario {
      */
     public void alterarSenha(String senhaAntiga, String senhaNova) {
         if (!this.senha.equals(senhaAntiga)) {
-            System.out.println("Senha antiga incorreta");}
-            else if (this.senha.equals(senhaNova)) {
-             System.out.println("A senha atual não pode ser igual a antiga");
+            System.out.println("Senha antiga incorreta");
+        } else if (this.senha.equals(senhaNova)) {
+            System.out.println("A senha atual não pode ser igual a antiga");
         } else {
             this.senha = senhaNova;
-            System.out.println("Senha alterada com sucesso");}
+            System.out.println("Senha alterada com sucesso");
         }
-     
-    
+    }
 
     /**
      * Verifica se o login é válido comparando email e senha.
@@ -120,5 +117,17 @@ public class usuario {
      */
     public void registrarPonto() {
         //será criada a classe de registrar ponto, adicionar depois como irá funcionar o método
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{"
+                + "nome='" + nome + '\''
+                + ", cpf='" + getCpfPseudoanonimizado() + '\''
+                + ", endereco='" + endereco + '\''
+                + ", email='" + email + '\''
+                + ", telefone='" + telefone + '\''
+                + // Senha incluída por segurança
+                '}';
     }
 }
