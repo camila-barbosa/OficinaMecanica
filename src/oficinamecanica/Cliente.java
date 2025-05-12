@@ -17,7 +17,7 @@ public class Cliente {
     private String nome;
     private String telefone;
     private String email;
-    private List<Veiculo> veiculos;
+    private final List<Veiculo> veiculos;  //perguntar pelli
 
     //construtor
     public Cliente(String nome, String telefone, String email) {
@@ -61,9 +61,9 @@ public class Cliente {
             veiculos.add(veiculo);
         }
     }
-    /*
-    adiciona um veiculo na lista de veiculos do cliente
-    @param placa Placa do veiculo que vai ser removido
+    /**
+    *remove um veiculo na lista de veiculos do cliente
+    *@param placa Placa do veiculo que vai ser removido
     *@return true se o veículo foi encontrado e removido e false se acontecer o contrário
     */
     public boolean removerVeiculo(String placa){
@@ -76,13 +76,21 @@ public class Cliente {
         return false;}
         
     //classe veiculo esta incompleta.
-    /*
+    /**
     *retorna lista de veiculos do cliente
     *@return Lista contendo todos os veiculos do cliente
     */
     public List<Veiculo> listarVeiculos(){
         return new ArrayList<>(veiculos);
     }
-    
+@Override
+public String toString() {
+    return "Cliente{" +
+            "nome='" + nome + '\'' +
+            ", telefone='" + telefone + '\'' +
+            ", email='" + email + '\'' +
+            ", veiculos=" + veiculos +
+            '}';
+}    
     
 }

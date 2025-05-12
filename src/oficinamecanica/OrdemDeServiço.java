@@ -2,20 +2,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 package oficinamecanica;
 
-import view.MenuEstoque;
+import java.util.Date;
 
 /**
- *Essa será nossa classe Main
- * @author Camila
+ *
+ * @author barbo
  */
-
-public class Principal {
-
-    public static void main(String[] args) {
-        MenuEstoque menu = new MenuEstoque();
-        menu.exibirMenu();
-    }
-  
+public class OrdemDeServiço {
+private String codigo;
+private Date data;
+private Veiculo veiculo;
+private Cliente cliente;
+private Mecanico mecanicoResponsavel; //criar classe mecanico
 }

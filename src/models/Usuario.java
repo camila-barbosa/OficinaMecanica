@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package oficinamecanica;
+
+package models;
 
 /**
- * Essa classe é para administrar os usuários
- *
+ * Superclasse que serve como base para os usuários do sistema
  * @author barbo
  */
 public class Usuario {
@@ -131,3 +131,4 @@ public class Usuario {
                 '}';
     }
 }
+
