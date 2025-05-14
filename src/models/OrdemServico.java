@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-package oficinamecanica;
+package models;
 
 import java.util.Date;
 
@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author barbo
  */
-public class OrdemDeServiço {
+public class OrdemServico {
 private String codigo;
 private Date data;
 private Veiculo veiculo;
