@@ -14,7 +14,7 @@ public class Mecanico extends Usuario{
    
     private String especialidade;
     private boolean disponivel;
-    
+    //construtor 
      public Mecanico(String nome, String cpf, String endereco, String email, String telefone, String senha, String especialidade, boolean disponivel) {
         super(nome, cpf, endereco, email, telefone, senha);
         this.disponivel=disponivel;
@@ -36,9 +36,10 @@ public class Mecanico extends Usuario{
     }
     
     //métodos
-    /**
-     * realiza diagnóstico de um veículo e retorna uma ordem de serviço 
-     */
+   
+    public String realizarDiagnostico (Veiculo veiculo){
+        re
+    }
     
    
 }

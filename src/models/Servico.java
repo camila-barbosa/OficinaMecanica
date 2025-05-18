@@ -4,6 +4,8 @@
  */
 package models;
 
+import java.util.List;
+
 /**
  * Representação de serviços que podem ser associados a OrdemServico.
  *
@@ -15,16 +17,18 @@ public class Servico {
     private String descricao;
     private double preco;
     private String categoria;
+    private List<ItemEstoque> pecas;
 
     //construtor 
-    public Servico(String codigo, String descricao, double preco, String categoria) {
+    public Servico(String codigo, String descricao, double preco, String categoria, ItemEstoque pecas) {
         this.codigo = codigo;
         this.descricao = descricao;
         this.preco = preco;
         this.categoria = categoria;
+        this.pecas = (List<ItemEstoque>) pecas;
     }
 
-    //get e set
+    //getters e setters
     public String getCodigo() {
         return codigo;
     }
@@ -60,6 +64,14 @@ public class Servico {
         this.categoria = categoria;
     }
 
+    public ItemEstoque getPecas() {
+        return (ItemEstoque) pecas;
+    }
+
+    public void setPecas(ItemEstoque pecas) {
+        this.pecas = (List<ItemEstoque>) pecas;
+    }
+
     //métodos
     /**
      * Atualiza a descrição do serviço
@@ -77,6 +89,7 @@ public class Servico {
                 + ", descricao='" + descricao + '\''
                 + ", preco=" + preco
                 + ", categoria='" + categoria + '\''
+                + ", pecas=" + pecas + '\''
                 + '}';
     }
 }
