@@ -6,6 +6,7 @@ package models;
 
 /**
  * Representação de serviços que podem ser associados a OrdemServico.
+ *
  * @author camila_barbosa
  */
 public class Servico {
@@ -60,22 +61,22 @@ public class Servico {
     }
 
     //métodos
-    
     /**
      * Atualiza a descrição do serviço
+     *
      * @param novaDescricao Nova descrição que será atribuída
      */
     public void atualizarDescricao(String novaDescricao) {
         this.descricao = novaDescricao;
     }
-    
+
     @Override
     public String toString() {
-        return "Servico{" +
-                "codigo='" + codigo + '\'' +
-                ", descricao='" + descricao + '\'' +
-                ", preco=" + preco +
-                ", categoria='" + categoria + '\'' +
-                '}';
+        return "Servico{"
+                + "codigo='" + codigo + '\''
+                + ", descricao='" + descricao + '\''
+                + ", preco=" + preco
+                + ", categoria='" + categoria + '\''
+                + '}';
     }
 }

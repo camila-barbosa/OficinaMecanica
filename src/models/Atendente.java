@@ -4,8 +4,6 @@
  */
 package models;
 
-import oficinamecanica.Cliente;
-import oficinamecanica.Veiculo;
 
 /**
  *
