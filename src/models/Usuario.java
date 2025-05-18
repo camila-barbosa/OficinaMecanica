@@ -12,7 +12,7 @@ package models;
 public class Usuario {
 
     private String nome;
-    private String cpf;
+    private String cpf;  
     private String endereco;
     private String email;
     private String telefone;

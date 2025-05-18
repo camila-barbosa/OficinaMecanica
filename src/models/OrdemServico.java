@@ -6,6 +6,7 @@
 package models;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -17,4 +18,6 @@ private Date data;
 private Veiculo veiculo;
 private Cliente cliente;
 private Mecanico mecanicoResponsavel; //criar classe mecanico
+private StatusOrdem status;
+private final List<Servico> servicos; //criar classe serviço
 }
