@@ -4,6 +4,7 @@
  */
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,12 +21,12 @@ public class Servico {
     private List<ItemEstoque> pecas;
 
     //construtor 
-    public Servico(String codigo, String descricao, double preco, String categoria, ItemEstoque pecas) {
+    public Servico(String codigo, String descricao, double preco, String categoria, List<ItemEstoque> pecas) {
         this.codigo = codigo;
         this.descricao = descricao;
         this.preco = preco;
         this.categoria = categoria;
-        this.pecas = (List<ItemEstoque>) pecas;
+        this.pecas = new ArrayList<>(pecas);
     }
 
     //getters e setters
@@ -92,4 +93,5 @@ public class Servico {
                 + ", pecas=" + pecas + '\''
                 + '}';
     }
+ 
 }

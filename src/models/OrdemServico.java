@@ -4,6 +4,7 @@
  */
 package models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,10 +21,11 @@ public class OrdemServico {
     private Cliente cliente;
     private Mecanico mecanicoResponsavel;
     private StatusOrdem status;
-    private List<Servico> servicos;
+    private final List<Servico> servicos;  //private final foi sugerido pela IDE, perguntar pelli.
 
     //construtor
-    public OrdemServico(String codigo, Date data, Double precoTotal, Veiculo veiculo, Cliente cliente, Mecanico mecanicoResponsavel, StatusOrdem status, Servico servicos) {
+    public OrdemServico(String codigo, Date data, double precoTotal, Veiculo veiculo,
+            Cliente cliente, Mecanico mecanicoResponsavel, StatusOrdem status, List<Servico> servicos) {
         this.codigo = codigo;
         this.data = data;
         this.precoTotal = precoTotal;
@@ -31,7 +33,7 @@ public class OrdemServico {
         this.cliente = cliente;
         this.mecanicoResponsavel = mecanicoResponsavel;
         this.status = status;
-        this.servicos = (List<Servico>) servicos;
+        this.servicos = new ArrayList<> (servicos);
     }
 
     //getters e setters
@@ -51,11 +53,11 @@ public class OrdemServico {
         this.data = data;
     }
 
-    public Double getPrecoTotal() {
+    public double getPrecoTotal() {
         return precoTotal;
     }
 
-    public void setPrecoTotal(Double precoTotal) {
+    public void setPrecoTotal(double precoTotal) {
         this.precoTotal = precoTotal;
     }
 
@@ -94,6 +96,7 @@ public class OrdemServico {
     //métodos
     /**
      * Calcula o preço total somando os serviços
+     * @return retorna o valor total dos serviços realizados
      */
     public double calcularTotal() {
         this.precoTotal = servicos.stream() //converte a lista em stream
@@ -108,7 +111,7 @@ public class OrdemServico {
      * @param servico serviço que será adicionado
      */
     public void adicionarServico(Servico servico) {
-        servico.add(servico);
+        servicos.add(servico);
         calcularTotal(); //atualiza preço total
     }
 
@@ -130,4 +133,16 @@ public class OrdemServico {
     public void alterarStatus(StatusOrdem novoStatus) {
         this.status = novoStatus;
     }
+    
+    @Override
+public String toString() {
+    return "OrdemDeServico{" +
+           "codigo='" + codigo + '\'' +
+           ", status=" + status +
+           ", precoTotal=" + precoTotal +
+           ", veiculo=" + veiculo +
+           ", cliente=" + cliente +
+           ", qtdServicos=" + servicos.size() +
+           '}';
+}
 }
