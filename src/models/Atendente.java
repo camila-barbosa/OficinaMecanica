@@ -4,9 +4,6 @@
  */
 package models;
 
-import oficinamecanica.Cliente;
-import oficinamecanica.Veiculo;
-
 /**
  *
  * @author marcos_miller
@@ -41,7 +38,6 @@ public class Atendente extends Usuario {
         return null;
     };
     
-    //gerarOrdemServiço
 }
     
 
