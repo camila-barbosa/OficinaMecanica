@@ -54,9 +54,5 @@ public class Agendamento {
     }
     
     //ver os detalhes
-    public void verDetalhes(){
-    return "Detalhes do seu AGENDAMENTO: \n" +
-            
-    }
     
 }
