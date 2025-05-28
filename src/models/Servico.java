@@ -4,8 +4,12 @@
  */
 package models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Representação de serviços que podem ser associados a OrdemServico.
+ *
  * @author camila_barbosa
  */
 public class Servico {
@@ -14,16 +18,18 @@ public class Servico {
     private String descricao;
     private double preco;
     private String categoria;
+    private List<ItemEstoque> pecas;
 
     //construtor 
-    public Servico(String codigo, String descricao, double preco, String categoria) {
+    public Servico(String codigo, String descricao, double preco, String categoria, List<ItemEstoque> pecas) {
         this.codigo = codigo;
         this.descricao = descricao;
         this.preco = preco;
         this.categoria = categoria;
+        this.pecas = new ArrayList<>(pecas);
     }
 
-    //get e set
+    //getters e setters
     public String getCodigo() {
         return codigo;
     }
@@ -59,23 +65,33 @@ public class Servico {
         this.categoria = categoria;
     }
 
+    public ItemEstoque getPecas() {
+        return (ItemEstoque) pecas;
+    }
+
+    public void setPecas(ItemEstoque pecas) {
+        this.pecas = (List<ItemEstoque>) pecas;
+    }
+
     //métodos
-    
     /**
      * Atualiza a descrição do serviço
+     *
      * @param novaDescricao Nova descrição que será atribuída
      */
     public void atualizarDescricao(String novaDescricao) {
         this.descricao = novaDescricao;
     }
-    
+
     @Override
     public String toString() {
-        return "Servico{" +
-                "codigo='" + codigo + '\'' +
-                ", descricao='" + descricao + '\'' +
-                ", preco=" + preco +
-                ", categoria='" + categoria + '\'' +
-                '}';
+        return "Servico{"
+                + "codigo='" + codigo + '\''
+                + ", descricao='" + descricao + '\''
+                + ", preco=" + preco
+                + ", categoria='" + categoria + '\''
+                + ", pecas=" + pecas + '\''
+                + '}';
     }
+ 
 }

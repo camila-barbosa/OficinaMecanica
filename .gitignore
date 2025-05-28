@@ -1,2 +1,20 @@
+# Ignorar pastas de build e distribuição
 /dist/
 /build/
+
+# Ignorar configurações privadas do NetBeans
+/nbproject/private/
+
+# Ignorar arquivos compilados Java
+*.class
+
+# Ignorar arquivos temporários, logs, backups
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Ignorar outras pastas geradas automaticamente pelo NetBeans
+/nbbuild/
+/nbdist/
+/.nb-gradle/
