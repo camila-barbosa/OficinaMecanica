@@ -12,7 +12,7 @@ import models.enums.StatusAgendamento;
  * @author marcos_miller
  */
 public class Agendamento {
-    //criando meusatributos
+    //criando meus atributos
     private LocalDateTime dataHora;
     private Cliente cliente;
     private Veiculo veiculo;
