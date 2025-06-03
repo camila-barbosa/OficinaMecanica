@@ -5,130 +5,194 @@
 
 package models;
 
+import java.time.LocalDateTime;
+
 /**
  * Superclasse que serve como base para os usuários do sistema
  * @author barbo
  */
 public class Usuario {
+    // Atributo estático para gerar IDs únicos para cada nova instância de Usuario
+    public static int proximoId = 1;
 
+    // Atributos privados da classe, encapsulando os dados do usuário
+    private int id;
     private String nome;
-    private String cpf;  
+    private String cpf; // O CPF é armazenado, mas acessado de forma pseudoanonimizada
     private String endereco;
     private String email;
     private String telefone;
-    private String senha;
+    private String senha; // Em sistemas reais, a senha deve ser hasheada e salgada por segurança!
 
-    //construtor
+    /**
+     * Construtor para criar uma nova instância de Usuário.
+     * Atribui um ID único e inicializa os dados básicos do usuário.
+     * @param nome O nome completo do usuário.
+     * @param cpf O CPF do usuário (será validado no setter).
+     * @param endereco O endereço completo do usuário.
+     * @param email O endereço de email do usuário.
+     * @param telefone O número de telefone do usuário.
+     * @param senha A senha do usuário (não armazenar em texto puro em produção).
+     */
     public Usuario(String nome, String cpf, String endereco, String email, String telefone, String senha) {
+        this.id = proximoId++; // Atribui um ID único e incrementa o contador
         this.nome = nome;
-        setCpf(cpf);
+        setCpf(cpf); // Usa o setter para aplicar a validação do CPF
         this.endereco = endereco;
         this.email = email;
         this.telefone = telefone;
         this.senha = senha;
     }
 
-    //getters e setters
-    public String getNome() {
-        return nome;
+    // --- Métodos Getters ---
+    // Permitem acessar os valores dos atributos (leitura)
+
+    public int getId() {
+        return id;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public String getNome() {
+        return nome;
     }
 
     public String getCpf() {
         return cpf;
     }
 
-    public void setCpf(String cpf) {
-        if (cpf != null && cpf.matches("\\d{11}")) {
-            this.cpf = cpf;
-        } else {
-            throw new IllegalArgumentException("CPF inválido");
-        }
-    }
-
-    //pseudoanonimização
-    public String getCpfPseudoanonimizado() {
-        if (cpf != null && cpf.length() == 11) {
-            return "***." + cpf.substring(3, 6) + ".***-" + cpf.substring(9);
-        } else {
-            return "CPF inválido";
-        }
-    }
-
     public String getEndereco() {
         return endereco;
-    }
-
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getTelefone() {
         return telefone;
+    }
+
+    // Não há getSenha() por questões de segurança. A senha é manipulada apenas internamente.
+
+    // --- Métodos Setters ---
+    // Permitem modificar os valores dos atributos (escrita).
+    // O ID não possui setter, pois deve ser imutável após a criação.
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    /**
+     * Define o CPF do usuário, aplicando validação para garantir que tenha 11 dígitos numéricos.
+     * @param cpf O CPF a ser definido.
+     * @throws IllegalArgumentException Se o CPF for nulo ou não contiver exatamente 11 dígitos.
+     */
+    public void setCpf(String cpf) {
+        if (cpf != null && cpf.matches("\\d{11}")) {
+            this.cpf = cpf;
+        } else {
+            throw new IllegalArgumentException("CPF inválido: Deve conter exatamente 11 dígitos numéricos.");
+        }
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
 
-    //senha não terá get e set por segurança
+    // --- Métodos de Comportamento e Utilitários ---
+
     /**
-     * permite que o usuário altere a sua senha caso tenha esquecido
-     *
-     * @param senhaAntiga Atual senha do usuário
-     * @param senhaNova nova senha definida
+     * Retorna o CPF do usuário em um formato pseudoanonimizado para privacidade.
+     * Exemplo: "***.123.***-78"
+     * @return O CPF pseudoanonimizado ou uma mensagem de "CPF inválido" se o CPF não for válido.
      */
-    public void alterarSenha(String senhaAntiga, String senhaNova) {
-        if (!this.senha.equals(senhaAntiga)) {
-            System.out.println("Senha antiga incorreta");
-        } else if (this.senha.equals(senhaNova)) {
-            System.out.println("A senha atual não pode ser igual a antiga");
+    public String getCpfPseudoanonimizado() {
+        if (cpf != null && cpf.length() == 11) {
+            // Formata o CPF para mascarar partes, mantendo apenas alguns dígitos visíveis.
+            return "***." + cpf.substring(3, 6) + ".***-" + cpf.substring(9);
         } else {
-            this.senha = senhaNova;
-            System.out.println("Senha alterada com sucesso");
+            return "CPF inválido ou não formatado";
         }
     }
 
     /**
-     * Verifica se o login é válido comparando email e senha.
-     *
-     * @param email O email informado no login.
-     * @param senha A senha informada no login.
-     * @return true se as credenciais estiverem corretas, false caso contrário.
+     * Permite que o usuário altere sua senha.
+     * Em um sistema real, a senha antiga seria comparada com um hash.
+     * @param senhaAntiga A senha atual do usuário para verificação.
+     * @param senhaNova A nova senha a ser definida.
      */
-    public boolean fazerLogin(String email, String senha) {
-        return this.email.equals(email) && this.senha.equals(senha);
+    public void alterarSenha(String senhaAntiga, String senhaNova) {
+        if (!this.senha.equals(senhaAntiga)) {
+            System.out.println("Erro: Senha antiga incorreta.");
+        } else if (this.senha.equals(senhaNova)) {
+            System.out.println("Erro: A nova senha não pode ser igual à senha atual.");
+        } else {
+            this.senha = senhaNova; // Em produção, a nova senha seria hasheada e salgada aqui.
+            System.out.println("Senha alterada com sucesso.");
+        }
     }
 
     /**
-     * Registra um ponto de entrada ou saída com data e hora atual.
-     *
+     * Verifica as credenciais de login do usuário.
+     * @param emailDigitado O email informado pelo usuário.
+     * @param senhaDigitada A senha informada pelo usuário.
+     * @return true se o email e a senha corresponderem, false caso contrário.
+     */
+    public boolean fazerLogin(String emailDigitado, String senhaDigitada) {
+        // Compara o email e a senha digitados com os atributos do usuário.
+        return this.email.equals(emailDigitado) && this.senha.equals(senhaDigitada);
+    }
+
+    /**
+     * Simula o registro de ponto do funcionário.
+     * (A lógica completa será implementada em uma classe dedicada de Registro de Ponto,
+     * que pode ser associada a este usuário.)
      */
     public void registrarPonto() {
-        //será criada a classe de registrar ponto, adicionar depois como irá funcionar o método
+        System.out.println(this.nome + " (ID: " + this.id + ") registrou o ponto às " + LocalDateTime.now() + ".");
+        // Futuramente, esta informação seria persistida em um sistema de controle de ponto.
+    }
+
+    /**
+     * Sobrescreve o método toString() para fornecer uma representação textual do objeto Usuario.
+     * Útil para depuração e logs.
+     * @return Uma string formatada com os detalhes do usuário, exceto a senha completa.
+     */
+    @Override
+    public String toString() {
+        // Removida a linha de comentário para evitar erro de compilação.
+        // A senha não é incluída para não expor informações sensíveis.
+        return "Usuario{"
+                + "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", cpf='" + getCpfPseudoanonimizado() + '\'' + // Usa o método pseudoanonimizado
+                ", endereco='" + endereco + '\'' +
+                ", email='" + email + '\'' +
+                ", telefone='" + telefone + '\'' +
+                '}';
+    }
+
+    // É uma boa prática sobrescrever equals e hashCode se você for usar objetos Usuario
+    // em coleções como HashSet ou como chaves em HashMap, ou para comparar objetos por valor.
+    // Isso é especialmente importante quando se tem um ID único.
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return id == usuario.id; // Usuários são iguais se tiverem o mesmo ID
     }
 
     @Override
-    public String toString() {
-        return "Usuario{"
-                + "nome='" + nome + '\''
-                + ", cpf='" + getCpfPseudoanonimizado() + '\''
-                + ", endereco='" + endereco + '\''
-                + ", email='" + email + '\''
-                + ", telefone='" + telefone + '\''
-                + // Senha incluída por segurança
-                '}';
+    public int hashCode() {
+        return id; // O hash code pode ser baseado no ID único
     }
 }
 

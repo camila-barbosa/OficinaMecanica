@@ -3,7 +3,7 @@
 /build/
 
 # Ignorar configurações privadas do NetBeans
-/nbproject/private/
+/nbproject/private/private.xml
 
 # Ignorar arquivos compilados Java
 *.class

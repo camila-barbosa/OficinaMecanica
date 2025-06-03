@@ -84,6 +84,5 @@ public class Mecanico extends Usuario {
         //atualiza status do mecânico e da ordem
         this.setDisponivel(false);
         ordem.setStatus(StatusOrdem.EM_EXECUCAO);
-
-      
+    }   
 }
