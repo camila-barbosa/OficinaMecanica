@@ -39,7 +39,6 @@ public class Atendente extends Usuario {
         return null;
     };
     
-    //gerarOrdemServiço
 }
     
 

@@ -54,7 +54,8 @@ public class Mecanico extends Usuario {
             throw new IllegalStateException("Mecânico não disponível");
         }
 
-         ///criar enum 
+        List<Servico> servicos = new ArrayList<>();
+        //servicos.add((Servico.DIAGNOSTICO); ///CRIAR ENUM
 
         return new OrdemServico(
                 "OS-" + System.currentTimeMillis(),
