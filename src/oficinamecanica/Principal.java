@@ -5,9 +5,11 @@
 package oficinamecanica;
 
 import view.MenuEstoque;
+import models.Servico;
 
 /**
- *Essa será nossa classe Main
+ * Essa será nossa classe Main
+ *
  * @author Camila
  */
 
@@ -16,6 +18,10 @@ public class Principal {
     public static void main(String[] args) {
         MenuEstoque menu = new MenuEstoque();
         menu.exibirMenu();
+
+        Servico servico = Servico.TROCA_OLEO;
+        System.out.println("Serviço: " + servico.getDescricao());
+        System.out.println("Preço: R$" + servico.getPreco());
+
     }
-  
 }

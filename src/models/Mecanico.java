@@ -54,8 +54,7 @@ public class Mecanico extends Usuario {
             throw new IllegalStateException("Mecânico não disponível");
         }
 
-        List<Servico> servicos = new ArrayList<>();
-        servicos.add(new Servico("DIAG", "Diagnóstico inicial", 50.0, "Avaliação", null));
+         ///criar enum 
 
         return new OrdemServico(
                 "OS-" + System.currentTimeMillis(),
@@ -83,7 +82,7 @@ public class Mecanico extends Usuario {
         }
         //atualiza status do mecânico e da ordem
         this.setDisponivel(false);
-        ordem.setStatus(StatusOrdem.EM_EXECUCAO);
+        ordem.setStatus(StatusOrdem.EM_EXECUCAO);}
 
       
 }

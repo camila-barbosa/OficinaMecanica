@@ -1,97 +1,38 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
  */
 package models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Representação de serviços que podem ser associados a OrdemServico.
  *
  * @author camila_barbosa
  */
-public class Servico {
+public enum Servico{
+    TROCA_OLEO("Troca de Óleo", 150.00),
+    ALINHAMENTO("Alinhamento", 120.00),
+    BALANCEAMENTO("Balanceamento", 100.00),
+    TROCA_PASTILHA_FREIO("Troca de Pastilhas de Freio", 200.00),
+    TROCA_AMORTECEDOR("Troca de Amortecedor", 350.00),
+    REVISAO_FREIOS("Revisão do Sistema de Freios", 180.00),
+    DIAGNOSTICO_ELETRICO("Diagnóstico Elétrico", 90.00),
+    TROCA_FILTRO_AR("Troca do Filtro de Ar", 80.00),
+    TROCA_VELAS("Troca de Velas de Ignição", 130.00),
+    LAVAGEM("Lavagem Completa", 60.00);
 
-    private String codigo;
-    private String descricao;
-    private double preco;
-    private String categoria;
-    private List<ItemEstoque> pecas;
+    private final String descricao;
+    private final double preco;
 
-    //construtor 
-    public Servico(String codigo, String descricao, double preco, String categoria, List<ItemEstoque> pecas) {
-        this.codigo = codigo;
+    Servico(String descricao, double preco) {
         this.descricao = descricao;
         this.preco = preco;
-        this.categoria = categoria;
-        this.pecas = new ArrayList<>(pecas);
-    }
-
-    //getters e setters
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
     }
 
     public String getDescricao() {
         return descricao;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
     public double getPreco() {
         return preco;
     }
-
-    public void setPreco(double preco) {
-        if (preco < 0) {
-            throw new IllegalArgumentException("Preço não pode ser negativo!");
-        }
-        this.preco = preco;
-    }
-
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
-
-    public ItemEstoque getPecas() {
-        return (ItemEstoque) pecas;
-    }
-
-    public void setPecas(ItemEstoque pecas) {
-        this.pecas = (List<ItemEstoque>) pecas;
-    }
-
-    //métodos
-    /**
-     * Atualiza a descrição do serviço
-     *
-     * @param novaDescricao Nova descrição que será atribuída
-     */
-    public void atualizarDescricao(String novaDescricao) {
-        this.descricao = novaDescricao;
-    }
-
-    @Override
-    public String toString() {
-        return "Servico{"
-                + "codigo='" + codigo + '\''
-                + ", descricao='" + descricao + '\''
-                + ", preco=" + preco
-                + ", categoria='" + categoria + '\''
-                + ", pecas=" + pecas + '\''
-                + '}';
-    }
- 
 }
