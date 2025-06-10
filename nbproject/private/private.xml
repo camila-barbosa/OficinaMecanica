@@ -3,16 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/marcos_miller/NetBeansProjects/OficinaMecanica/.gitignore</file>
-            <file>file:/home/marcos_miller/NetBeansProjects/OficinaMecanica/src/models/ItemEstoque.java</file>
-            <file>file:/home/marcos_miller/NetBeansProjects/OficinaMecanica/src/models/Gerente.java</file>
-            <file>file:/home/marcos_miller/NetBeansProjects/OficinaMecanica/src/models/Atendente.java</file>
-            <file>file:/home/marcos_miller/NetBeansProjects/OficinaMecanica/src/repository/UsuarioCRUD.java</file>
-            <file>file:/home/marcos_miller/NetBeansProjects/OficinaMecanica/src/models/Pagamento.java</file>
-            <file>file:/home/marcos_miller/NetBeansProjects/OficinaMecanica/src/models/Agendamento.java</file>
-            <file>file:/home/marcos_miller/NetBeansProjects/OficinaMecanica/src/models/enums/StatusAgendamento.java</file>
-            <file>file:/home/marcos_miller/NetBeansProjects/OficinaMecanica/src/repository/EstoqueCRUD.java</file>
-            <file>file:/home/marcos_miller/NetBeansProjects/OficinaMecanica/src/models/Usuario.java</file>
+            <file>file:/C:/Users/barbo/Documents/PROJETO%20JAVA/projetoPoo/OficinaMecanica/src/models/Usuario.java</file>
+            <file>file:/C:/Users/barbo/Documents/PROJETO%20JAVA/projetoPoo/OficinaMecanica/src/models/Cliente.java</file>
+            <file>file:/C:/Users/barbo/Documents/PROJETO%20JAVA/projetoPoo/OficinaMecanica/src/models/ItemEstoque.java</file>
+            <file>file:/C:/Users/barbo/Documents/PROJETO%20JAVA/projetoPoo/OficinaMecanica/src/models/Mecanico.java</file>
+            <file>file:/C:/Users/barbo/Documents/PROJETO%20JAVA/projetoPoo/OficinaMecanica/src/models/OrdemServico.java</file>
+            <file>file:/C:/Users/barbo/Documents/PROJETO%20JAVA/projetoPoo/OficinaMecanica/src/models/Servico.java</file>
+            <file>file:/C:/Users/barbo/Documents/PROJETO%20JAVA/projetoPoo/OficinaMecanica/src/models/StatusOrdem.java</file>
+            <file>file:/C:/Users/barbo/Documents/PROJETO%20JAVA/projetoPoo/OficinaMecanica/src/models/Atendente.java</file>
+            <file>file:/C:/Users/barbo/Documents/PROJETO%20JAVA/projetoPoo/OficinaMecanica/src/models/Veiculo.java</file>
+            <file>file:/C:/Users/barbo/Documents/PROJETO%20JAVA/projetoPoo/OficinaMecanica/src/repository/EstoqueCRUD.java</file>
+            <file>file:/C:/Users/barbo/Documents/PROJETO%20JAVA/projetoPoo/OficinaMecanica/src/view/MenuEstoque.java</file>
+            <file>file:/C:/Users/barbo/Documents/PROJETO%20JAVA/projetoPoo/OficinaMecanica/src/oficinamecanica/Principal.java</file>
         </group>
     </open-files>
 </project-private>
