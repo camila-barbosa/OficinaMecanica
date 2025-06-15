@@ -5,12 +5,14 @@
 package oficinamecanica; 
 
 import models.*; 
-import models.enums.TipoPagamento;
-import observers.RelatoriosFinanceiros; 
+import models.enums.TipoPagamento; // Pode ser removido se não for usar Pagamento/Financeiro no Main
+import observers.IObservavelOrdemServico; // Importa a interface Subject
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import view.PainelMecanico;
+import observers.IObservadorOrdemServico;
 
 
 /**
@@ -25,97 +27,72 @@ public class Principal {
 
         System.out.println("=====================================================");
         System.out.println("          INÍCIO DO TESTE: PADRÃO OBSERVER          ");
+        System.out.println("          (OrdemServico -> PainelMecanico)         ");
         System.out.println("=====================================================");
 
-        // --- 1. CRIAÇÃO DE DADOS MOCADOS PARA O TESTE ---
+        // --- 1. CRIAÇÃO DE DADOS MOCADOS (FICTÍCIOS) PARA O TESTE ---
 
-        // Criando instâncias
+        // Criando instâncias mínimas para as dependências da OrdemServico
+        // CONFIRA SE OS CONSTRUTORES ESTÃO ALINHADOS COM SUAS CLASSES REAIS!
         Cliente clienteTeste = new Cliente("Ana Costa", "11987654321", "ana.costa@email.com");
-        Veiculo veiculoTeste = new Veiculo("ABC1D23", "Fiat Argo", "Preto", clienteTeste, null); 
-        Mecanico mecanicoTeste = new Mecanico("Pedro Mecanico", "12345678901", "Rua das Oficinas, 10", "pedro@oficina.com", "987654321", "senhaMec", "Motor", true );
-        StatusOrdem statusOSInicial = StatusOrdem.AGUARDANDO_PAGAMENTO;
-        List<Servico> servicosOS = new ArrayList<>();
-
-        // Criando uma Ordem de Serviço para associar ao Pagamento
-        OrdemServico osTeste = new OrdemServico(
-            "OS-TESTE-001", new Date(), 0.0, veiculoTeste, clienteTeste, mecanicoTeste, statusOSInicial, servicosOS
+        Veiculo veiculoTeste = new Veiculo("DEF5678", "Ford Ka", "Vermelho", clienteTeste, null); 
+        // Mecanico e Atendente são necessários para criar a OrdemServico, mas não serão passados na notificação
+        Mecanico mecanicoChefe = new Mecanico("Carlos Chefe", "11122233344", "Rua A", "carlos@oficina.com", "987654321", "senha123", "Geral", true); 
+        
+        // Crie o objeto da OS que será o Publicador
+        OrdemServico osCarroA = new OrdemServico(
+            "OS-001-A", new Date(), 0.0, veiculoTeste, clienteTeste, mecanicoChefe, StatusOrdem.EM_DIAGNOSTICO, new ArrayList<Servico>()
         );
-        System.out.println("\n[SETUP] Ordem de Serviço criada: " + osTeste.getCodigo());
+        System.out.println("\n[SETUP] Ordem de Serviço Publicador criada: " + osCarroA.getCodigo() + " (Status Inicial: " + osCarroA.getStatus() + ")");
         
         System.out.println("-----------------------------------------------------");
 
 
         // --- 2. DEMONSTRAÇÃO DO PADRÃO OBSERVER ---
 
-        // A. Criação do Publicador (Subject): A instância de Pagamento
-       
-        System.out.println("\n[PASSO 1] Criando o Publicador (Pagamento)...");
-        Pagamento pagamentoPrincipal = new Pagamento(osTeste); // O Pagamento é associado à OS
-        
-        // B. Criação do Assinante (Observer): A instância de RelatoriosFinanceiros
-        
-        System.out.println("[PASSO 2] Criando o Assinante (RelatoriosFinanceiros)...");
-        RelatoriosFinanceiros relatoriosFinanceiros = new RelatoriosFinanceiros();
+        // A. Criação do Assinante (Observer): A instância do PainelMecanico
+        System.out.println("\n[PASSO 1] Criando o Assinante (PainelMecanico)...");
+        PainelMecanico painelMecanico = new PainelMecanico();
 
-        // C. Registro do Assinante no Publicador: O Contador Chefe assina o Serviço de Pagamento
-        
-        System.out.println("[PASSO 3] Assinante RelatoriosFinanceiros se registrando no Pagamento " + pagamentoPrincipal.getId() + "...");
-        pagamentoPrincipal.adicionarObservador(relatoriosFinanceiros);
+        // B. Registro do Assinante no Publicador: O PainelMecanico assina a OrdemServico
+        System.out.println("[PASSO 2] PainelMecanico se registrando na OrdemServico " + osCarroA.getCodigo() + "...");
+        osCarroA.adicionarObservador(painelMecanico); // O PainelMecanico agora observará as mudanças de status da OS
         
         System.out.println("-----------------------------------------------------");
 
 
-        // --- 3. CENÁRIOS DE TESTE ---
+        // --- 3. CENÁRIOS DE TESTE: ALTERAÇÕES DE STATUS DA OS ---
 
-        // CENÁRIO 1:
-        System.out.println("\n--- CENÁRIO 1: Pagamento Finalizado com Sucesso ---");
-        // O método finalizar() do Pagamento é chamado, alterando seu estado
-        System.out.println("[AÇÃO] Finalizando o Pagamento " + pagamentoPrincipal.getId() + "...");
-        pagamentoPrincipal.finalizar(250.75, TipoPagamento.CARTAO_CREDITO);
-        // Exibe os detalhes do Pagamento para confirmar o estado final
-        System.out.println("\n[VERIFICAÇÃO] Detalhes do Pagamento após finalização:");
-        pagamentoPrincipal.exibirDetalhes();
-        // Exibe o relatório parcial para mostrar que a transação foi registrada
-        System.out.println("\n[RESULTADO] Verificando o relatório financeiro parcial:");
-        relatoriosFinanceiros.exibirRelatorioParcial();
-        // Gera o relatório final para consolidação (se a lógica for mais complexa)
-        relatoriosFinanceiros.gerarRelatorioFinanceiro();
+        // CENÁRIO 1: Alteração para status relevante para o Mecânico (EM_DIAGNÓSTICO)
+        System.out.println("\n--- CENÁRIO 1: Status para 'EM_DIAGNÓSTICO' (relevante para mecânico) ---");
+        // O método alterarStatus agora SÓ recebe o novoStatus
+        System.out.println("[AÇÃO] Alterando status da OS " + osCarroA.getCodigo() + " para EM_DIAGNOSTICO...");
+        osCarroA.alterarStatus(StatusOrdem.EM_DIAGNOSTICO); // REMOVIDO o parâmetro Usuario para simplicidade
         
         System.out.println("-----------------------------------------------------");
 
-
-        // CENÁRIO 2: O Pagamento é Finalizado, mas SEM Assinante Registrado
-        System.out.println("\n--- CENÁRIO 2: Pagamento Finalizado SEM Assinante ---");
-        // Criando um novo Pagamento que não terá o RelatoriosFinanceiros como assinante
-        Pagamento pagamentoSemAssinante = new Pagamento(osTeste);
-        System.out.println("[SETUP] Novo Pagamento " + pagamentoSemAssinante.getId() + " criado (sem assinante registrado).");
-
-        // Finaliza o Pagamento. O RelatoriosFinanceiros NÃO deve ser notificado.
-        System.out.println("[AÇÃO] Finalizando Pagamento " + pagamentoSemAssinante.getId() + "...");
-        pagamentoSemAssinante.finalizar(75.00, TipoPagamento.DINHEIRO);
-        System.out.println("\n[VERIFICAÇÃO] Detalhes do Pagamento " + pagamentoSemAssinante.getId() + " (não deve aparecer no relatório):");
-        pagamentoSemAssinante.exibirDetalhes();
-        
-        // Verifica o relatório. O novo pagamento NÃO deve aparecer.
-        System.out.println("\n[RESULTADO] Verificando o relatório financeiro parcial (Pagamento " + pagamentoSemAssinante.getId() + " NÃO deve aparecer):");
-        relatoriosFinanceiros.exibirRelatorioParcial();
+        // CENÁRIO 2: Outra alteração para status relevante (EM_EXECUÇÃO)
+        System.out.println("\n--- CENÁRIO 2: Status para 'EM_EXECUÇÃO' (relevante para mecânico) ---");
+        System.out.println("[AÇÃO] Alterando status da OS " + osCarroA.getCodigo() + " para EM_EXECUCAO...");
+        osCarroA.alterarStatus(StatusOrdem.EM_EXECUCAO); // REMOVIDO o parâmetro Usuario
         
         System.out.println("-----------------------------------------------------");
 
-
-        // CENÁRIO 3: Assinante é Removido e o Pagamento é Finalizado Novamente
-        System.out.println("\n--- CENÁRIO 3: Assinante Removido ---");
-        // Remove o RelatoriosFinanceiros do pagamentoPrincipal
-        System.out.println("[AÇÃO] Removendo RelatoriosFinanceiros do Pagamento " + pagamentoPrincipal.getId() + "...");
-        pagamentoPrincipal.removerObservador(relatoriosFinanceiros);
-
-        // Finaliza o Pagamento 1 novamente. O RelatoriosFinanceiros NÃO deve ser notificado.
-        System.out.println("[AÇÃO] Finalizando Pagamento " + pagamentoPrincipal.getId() + " NOVAMENTE (não deve notificar):");
-        pagamentoPrincipal.finalizar(10.00, TipoPagamento.CARTAO_DEBITO);
+        // CENÁRIO 3: Alteração para status NÃO relevante para o Mecânico (AGUARDANDO_PAGAMENTO)
+        System.out.println("\n--- CENÁRIO 3: Status para 'AGUARDANDO_PAGAMENTO' (NÃO relevante para mecânico) ---");
+        System.out.println("[AÇÃO] Alterando status da OS " + osCarroA.getCodigo() + " para AGUARDANDO_PAGAMENTO...");
+        osCarroA.alterarStatus(StatusOrdem.AGUARDANDO_PAGAMENTO); // REMOVIDO o parâmetro Usuario
         
-        // Verifica o relatório. Nenhuma nova entrada para este pagamento deve aparecer.
-        System.out.println("\n[RESULTADO] Verificando o relatório financeiro parcial (nenhuma nova entrada para Pagamento " + pagamentoPrincipal.getId() + " deve aparecer):");
-        relatoriosFinanceiros.exibirRelatorioParcial();
+        System.out.println("-----------------------------------------------------");
+
+        // CENÁRIO 4: Assinante é Removido e o Status é Alterado Novamente
+        System.out.println("\n--- CENÁRIO 4: Removendo Assinante e Testando Novamente ---");
+        System.out.println("[AÇÃO] Removendo PainelMecanico como assinante da OS " + osCarroA.getCodigo() + "...");
+        osCarroA.removerObservador(painelMecanico);
+
+        System.out.println("[AÇÃO] Alterando status da OS " + osCarroA.getCodigo() + " para FINALIZADA (PainelMecanico NÃO deve reagir)...");
+        osCarroA.alterarStatus(StatusOrdem.FINALIZADA); // REMOVIDO o parâmetro Usuario
+        // O PainelMecanico NÃO deve exibir mensagens de notificação para esta última alteração.
         
         System.out.println("=====================================================");
         System.out.println("          FIM DO TESTE: PADRÃO OBSERVER            ");

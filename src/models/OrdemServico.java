@@ -7,12 +7,17 @@ package models;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import observers.IObservavelOrdemServico; // Importa a interface do Publicador
+import observers.IObservadorOrdemServico; 
 
 /**
+ * Representa uma Ordem de Serviço na oficina.
+ * Agora atua como um 'Subject' no padrão Observer, notificando interessados
+ * sobre mudanças de status.
  *
  * @author barbo
  */
-public class OrdemServico {
+public class OrdemServico implements IObservavelOrdemServico { // OrdemServico AGORA IMPLEMENTA a interface de Publicador
 
     private String codigo;
     private Date data;
@@ -21,9 +26,12 @@ public class OrdemServico {
     private Cliente cliente;
     private Mecanico mecanicoResponsavel;
     private StatusOrdem status;
-    private final List<Servico> servicos;  //private final foi sugerido pela IDE, perguntar pelli.
+    private final List<Servico> servicos;
 
-    //construtor
+    // NOVO ATRIBUTO: Lista para armazenar os observadores desta OrdemServico
+    private final List<IObservadorOrdemServico> observadores;
+
+    // Construtor original, modificado para inicializar a lista de observadores
     public OrdemServico(String codigo, Date data, double precoTotal, Veiculo veiculo,
             Cliente cliente, Mecanico mecanicoResponsavel, StatusOrdem status, List<Servico> servicos) {
         this.codigo = codigo;
@@ -33,10 +41,35 @@ public class OrdemServico {
         this.cliente = cliente;
         this.mecanicoResponsavel = mecanicoResponsavel;
         this.status = status;
-        this.servicos = new ArrayList<> (servicos);
+        this.servicos = new ArrayList<>(servicos);
+        this.observadores = new ArrayList<>(); // Inicializa a lista de observadores
     }
 
-    //getters e setters
+    // --- MÉTODOS DO PADRÃO OBSERVER (Implementando IObservavelOrdemServico) ---
+
+    @Override // BOA PRÁTICA: Indica que este método está sobrescrevendo um método da interface
+    public void adicionarObservador(IObservadorOrdemServico obs) {
+        if (!observadores.contains(obs)) { // Evita adicionar o mesmo observador múltiplas vezes
+            observadores.add(obs);
+            System.out.println("[OrdemServico " + this.codigo + "] Assinante de OS adicionado.");
+        }
+    }
+
+    @Override // BOA PRÁTICA: Indica que este método está sobrescrevendo um método da interface
+    public void removerObservador(IObservadorOrdemServico obs) {
+        observadores.remove(obs);
+        System.out.println("[OrdemServico " + this.codigo + "] Assinante de OS removido.");
+    }
+
+    @Override // BOA PRÁTICA: Indica que este método está sobrescrevendo um método da interface
+    public void notificarObservadores() { // Este método não precisa de parâmetros aqui, conforme definido na interface
+        System.out.println("[OrdemServico " + this.codigo + "] Enviando notícia de status aos assinantes...");
+        for (IObservadorOrdemServico obs : observadores) {
+            obs.notificarStatusOrdem(this); // Passa a si mesma (a OrdemServico) para o assinante.
+        }
+    }
+
+    // --- MÉTODOS GETTERS E SETTERS (ORIGINAIS) ---
     public String getCodigo() {
         return codigo;
     }
@@ -91,9 +124,16 @@ public class OrdemServico {
 
     public void setStatus(StatusOrdem status) {
         this.status = status;
+        // O método 'alterarStatus' é quem vai chamar 'notificarObservadores()', não o 'setStatus'
+    }
+    
+    // NOVO GETTER: Para a lista de serviços (útil para Observers se precisarem detalhes de serviço)
+    public List<Servico> getServicos() { 
+        return new ArrayList<>(servicos); // Retorna uma cópia para proteger a lista interna
     }
 
-    //métodos
+    // --- MÉTODOS DE NEGÓCIO (ORIGINAIS, COM MODIFICAÇÃO NO alterarStatus) ---
+
     /**
      * Calcula o preço total somando os serviços
      * @return retorna o valor total dos serviços realizados
@@ -113,6 +153,7 @@ public class OrdemServico {
     public void adicionarServico(Servico servico) {
         servicos.add(servico);
         calcularTotal(); //atualiza preço total
+        System.out.println("[OrdemServico " + this.codigo + "] Serviço '" + servico.getDescricao() + "' adicionado.");
     }
 
     /**
@@ -123,26 +164,34 @@ public class OrdemServico {
     public void removerServico(Servico servico) {
         servicos.remove(servico);
         calcularTotal(); //atualiza preço total
+        System.out.println("[OrdemServico " + this.codigo + "] Serviço '" + servico.getDescricao() + "' removido.");
     }
 
     /**
-     * Altera o status da ordem de serviço
+     * Altera o status da ordem de serviço.
+     * Após a alteração, NOTIFICA todos os assinantes registrados sobre a mudança.
      *
      * @param novoStatus status para qual será atualizado
      */
-    public void alterarStatus(StatusOrdem novoStatus) {
-        this.status = novoStatus;
+    public void alterarStatus(StatusOrdem novoStatus) { // Este método agora DISPARA a notificação
+        if (this.status != novoStatus) { // Notifica apenas se o status realmente mudou
+            this.status = novoStatus;
+            System.out.println("\n[OrdemServico " + this.codigo + "] Status alterado para -> " + novoStatus);
+            notificarObservadores(); // CHAMA OS OBSERVADORES AQUI!
+        } else {
+            System.out.println("\n[OrdemServico " + this.codigo + "] Status já é " + novoStatus + ". Nenhuma alteração/notificação.");
+        }
     }
     
     @Override
-public String toString() {
-    return "OrdemDeServico{" +
-           "codigo='" + codigo + '\'' +
-           ", status=" + status +
-           ", precoTotal=" + precoTotal +
-           ", veiculo=" + veiculo +
-           ", cliente=" + cliente +
-           ", qtdServicos=" + servicos.size() +
-           '}';
-}
+    public String toString() {
+        return "OrdemServico{" +
+                "codigo='" + codigo + '\'' +
+                ", status=" + status +
+                ", precoTotal=" + precoTotal +
+                ", veiculo=" + (veiculo != null ? veiculo.getPlaca() : "N/A") +
+                ", cliente=" + (cliente != null ? cliente.getNome() : "N/A") + // Use getNome() ou ajuste conforme seu Cliente
+                ", qtdServicos=" + servicos.size() +
+                '}';
+    }
 }
