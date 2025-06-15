@@ -79,7 +79,7 @@ public class Mecanico extends Usuario {
             throw new IllegalStateException("Mecânico não está disonível para executar ordem de serviço");
         }
         if (ordem.getStatus() != StatusOrdem.AGUARDANDO_LIBERACAO) {
-            throw new IllegalStateException("Ordem precisa estar com status aguardando liberação para ser executada");
+            throw renew IllegalStateException("Ordem precisa estar com status aguardando liberação para ser executada");
         }
         //atualiza status do mecânico e da ordem
         this.setDisponivel(false);
