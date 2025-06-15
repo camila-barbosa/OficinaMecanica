@@ -20,14 +20,15 @@ import observers.ObservadorPagamento;
  * Agora atua como um 'Subject' no padrão Observer, notificando interessados ao ser finalizado.
  */
 public class Pagamento {
-    private static int proximoId = 1; // Gerador automático de IDs
+    private static int proximoId = 1; 
 
     private int id;
     private LocalDateTime dataHora;
     private Double valor;
     private TipoPagamento tipo;
-    private OrdemServico ordemServico; // Associação direta com a Ordem de Serviço
-
+    private OrdemServico ordemServico;
+    
+    //ADICIONADO
     // Esta é a lista dos "assinantes" que querem ser avisados quando este pagamento for finalizado.
     private final List<ObservadorPagamento> observadores;
 
@@ -37,19 +38,19 @@ public class Pagamento {
      * @param ordemServico A OrdemDeServiço à qual este pagamento se refere.
      */
     public Pagamento(OrdemServico ordemServico) {
-        this.id = proximoId++; // Atribui um ID único
-        this.ordemServico = ordemServico; // Define a OS associada
-        this.observadores = new ArrayList<>(); // Inicializa a lista de assinantes VAZIA
+        this.id = proximoId++; 
+        this.ordemServico = ordemServico;
+        this.observadores = new ArrayList<>();
     }
 
-    // --- Métodos do Padrão Observer (Adicionados à sua classe existente) ---
+    // --- MÉTODOS DO OBSERVER ---
 
     /**
      * Adiciona um assinante à lista. Este assinante será notificado quando o pagamento for finalizado.
      * @param obs O assinante (quem vai ser avisado).
      */
     public void adicionarObservador(ObservadorPagamento obs) {
-        if (!observadores.contains(obs)) { // Evita adicionar o mesmo assinante várias vezes
+        if (!observadores.contains(obs)) {
             observadores.add(obs);
             System.out.println("Pagamento ID " + this.id + ": Assinante adicionado.");
         }
@@ -71,18 +72,16 @@ public class Pagamento {
     public void notificarObservadores() {
         System.out.println("Pagamento ID " + this.id + ": Enviando notícia aos assinantes sobre a finalização...");
         for (ObservadorPagamento obs : observadores) {
-            obs.notificarAssinantes(this); // Chamada alterada para o novo nome do método na interface
+            obs.notificarAssinantes(this);
         }
     }
 
-    // --- Métodos Getters (para acessar os dados do Pagamento) ---
     public int getId() { return id; }
     public Double getValor() { return valor; }
     public LocalDateTime getDataHora() { return dataHora; }
     public TipoPagamento getTipo() { return tipo; }
-    public OrdemServico getOrdemServico() { return ordemServico; } // Getter para a OS associada
+    public OrdemServico getOrdemServico() { return ordemServico; }
 
-    // --- Métodos Setters (para alterar os dados do Pagamento, se permitido) ---
     public void setId(int id) { this.id = id; }
     public void setValor(Double valor) { this.valor = valor; }
     public void setDataHora(LocalDateTime dataHora) { this.dataHora = dataHora; }
@@ -98,19 +97,19 @@ public class Pagamento {
      * @return Uma mensagem de confirmação da finalização.
      */
     public String finalizar(Double valorFinal, TipoPagamento tipoFinal) {
-        this.setValor(valorFinal); // Define o valor do pagamento
-        this.dataHora = LocalDateTime.now(); // Define a data/hora como o momento atual
-        this.setTipo(tipoFinal); // Define o tipo de pagamento
+        this.setValor(valorFinal);
+        this.dataHora = LocalDateTime.now();
+        this.setTipo(tipoFinal);
 
         String mensagem = "Pagamento de R$" + String.format("%.2f", valorFinal) +
-                " finalizado via " + tipoFinal + // Usa o enum diretamente para a string
+                " finalizado via " + tipoFinal +
                 " em " + this.dataHora.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) +
                 ". ID: " + this.id +
-                (this.ordemServico != null ? ", OS: " + this.ordemServico.getCodigo() : ""); // Inclui OS se houver
+                (this.ordemServico != null ? ", OS: " + this.ordemServico.getCodigo() : ""); 
 
-        System.out.println(mensagem); // Exibe a mensagem no console
+        System.out.println(mensagem); 
 
-        // O ponto chave do Observer: Avisar quem está interessado!
+        // O QUE REALMENTE IMPORTA PRA GENTE
         notificarObservadores();
 
         return mensagem;

@@ -18,12 +18,11 @@ import java.util.List;
 /**
  * Esta classe é um "Observer" concreto. Ela "implementa" o contrato ObservadorPagamento.
  * Sua responsabilidade é registrar pagamentos finalizados para futuros relatórios financeiros.
- * Pense nela como o "Contador Chefe" que anota todas as transações de pagamento.
  */
 public class RelatoriosFinanceiros implements ObservadorPagamento {
 
     // Uma lista interna para simular onde os dados do relatório seriam armazenados.
-    // Em um sistema real, isso seria salvo em um banco de dados, um arquivo, ou enviado para outro serviço.
+    // EM UM SISTEMA REALÍSTICO, isso seria salvo em um banco de dados, um arquivo, ou enviado para outro serviço.
     private List<String> transacoesRegistradas;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
@@ -44,34 +43,34 @@ public class RelatoriosFinanceiros implements ObservadorPagamento {
      * @param pagamento O Pagamento que acabou de ser finalizado.
      */
     @Override
-    public void notificarAssinantes(Pagamento pagamento) { // Implementação do método da interface
+    public void notificarAssinantes(Pagamento pagamento) {
         System.out.println("\n--- RelatoriosFinanceiros: Pagamento " + pagamento.getId() + " detectado ---");
 
         // Constrói uma linha de registro com os detalhes do pagamento.
-        // Pega as informações do objeto 'pagamento' que foi passado.
         String registro = String.format(
             "[%s] Pagamento ID: %d, Valor: R$ %.2f, Tipo: %s, OS: %s",
-            LocalDateTime.now().format(formatter), // Pega a data/hora AGORA para o registro no relatório
+            LocalDateTime.now().format(formatter),
             pagamento.getId(),
             pagamento.getValor(),
             pagamento.getTipo(),
-            // Verifica se tem OrdemDeServiço associada e pega o código dela, senão mostra "N/A"
             pagamento.getOrdemServico() != null ? pagamento.getOrdemServico().getCodigo() : "N/A"
         );
-        transacoesRegistradas.add(registro); // Adiciona o registro à lista interna
+        
+        //NOSSO INTERESSE
+        transacoesRegistradas.add(registro);
         System.out.println("RelatoriosFinanceiros: Transação registrada: " + registro);
 
-        // Imagine que aqui poderia ter código para:
-        // - Salvar esta transação em um banco de dados específico para relatórios.
-        // - Exportar para um arquivo CSV financeiro.
-        // - Enviar os dados para um sistema de contabilidade externo.
+        // aqui eu poderia ter:
+        // - lófgica pra salvar em um BD
+        // - exportar em um arquivo, um json
+        // - enviar esses dados para um outro service que podemos ter
     }
 
     /**
      * Método para exibir o relatório financeiro parcial registrado até o momento.
-     * Útil para fins de demonstração (DEBUG).
+     * para fins demonstração (DEBUG).
      */
-    public void exibirRelatorioParcial() { // Mantido para fins de demonstração
+    public void exibirRelatorioParcial() {
         System.out.println("\n--- Relatório Financeiro Parcial ---");
         if (transacoesRegistradas.isEmpty()) {
             System.out.println("Nenhuma transação registrada ainda.");
@@ -83,13 +82,9 @@ public class RelatoriosFinanceiros implements ObservadorPagamento {
         System.out.println("------------------------------------");
     }
     
-    // O método 'gerarRelatorioFinanceiro()' da sua UML pode ser implementado aqui
-    // para, por exemplo, consolidar as transações registradas e gerar um relatório final.
-    // Exemplo:
+    
     public void gerarRelatorioFinanceiro() {
         System.out.println("\n--- Gerando Relatório Financeiro Final ---");
-        // Lógica para consolidar os dados da transacoesRegistradas
-        // e gerar um relatório formatado, por exemplo, imprimindo no console ou salvando em um arquivo.
         if (transacoesRegistradas.isEmpty()) {
             System.out.println("Nenhuma transação para gerar relatório.");
             return;
