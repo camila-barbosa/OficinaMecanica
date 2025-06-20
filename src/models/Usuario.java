@@ -6,6 +6,7 @@
 package models;
 
 import java.time.LocalDateTime;
+import models.enums.TipoUsuario;
 
 /**
  * Superclasse que serve como base para os usuários do sistema
@@ -15,14 +16,14 @@ public class Usuario {
     // Atributo estático para gerar IDs únicos para cada nova instância de Usuario
     public static int proximoId = 1;
 
-    // Atributos privados da classe, encapsulando os dados do usuário
     private int id;
     private String nome;
-    private String cpf; // O CPF é armazenado, mas acessado de forma pseudoanonimizada
+    private String cpf;
     private String endereco;
     private String email;
     private String telefone;
-    private String senha; // Em sistemas reais, a senha deve ser hasheada e salgada por segurança!
+    private TipoUsuario tipo; 
+    private String senha;
 
     /**
      * Construtor para criar uma nova instância de Usuário.
@@ -32,20 +33,21 @@ public class Usuario {
      * @param endereco O endereço completo do usuário.
      * @param email O endereço de email do usuário.
      * @param telefone O número de telefone do usuário.
+     * @param tipo O tipo (perfil) do usuário (Gerente, Atendente, Mecanico).
      * @param senha A senha do usuário (não armazenar em texto puro em produção).
      */
-    public Usuario(String nome, String cpf, String endereco, String email, String telefone, String senha) {
-        this.id = proximoId++; // Atribui um ID único e incrementa o contador
+    public Usuario(String nome, String cpf, String endereco, String email, String telefone, TipoUsuario tipo, String senha) {
+        this.id = proximoId++; 
         this.nome = nome;
         setCpf(cpf); // Usa o setter para aplicar a validação do CPF
         this.endereco = endereco;
         this.email = email;
         this.telefone = telefone;
+        this.tipo = tipo; 
         this.senha = senha;
     }
 
     // --- Métodos Getters ---
-    // Permitem acessar os valores dos atributos (leitura)
 
     public int getId() {
         return id;
@@ -70,12 +72,13 @@ public class Usuario {
     public String getTelefone() {
         return telefone;
     }
-
-    // Não há getSenha() por questões de segurança. A senha é manipulada apenas internamente.
+    
+    public TipoUsuario getTipo(){ 
+        return tipo;
+    }
+    
 
     // --- Métodos Setters ---
-    // Permitem modificar os valores dos atributos (escrita).
-    // O ID não possui setter, pois deve ser imutável após a criação.
 
     public void setNome(String nome) {
         this.nome = nome;
@@ -87,9 +90,12 @@ public class Usuario {
      * @throws IllegalArgumentException Se o CPF for nulo ou não contiver exatamente 11 dígitos.
      */
     public void setCpf(String cpf) {
+        // Validação: verifica se o CPF não é nulo e contém exatamente 11 dígitos numéricos.
         if (cpf != null && cpf.matches("\\d{11}")) {
             this.cpf = cpf;
         } else {
+            // Lança uma exceção para indicar um valor inválido.
+            // Em um sistema real, essa exceção seria capturada e tratada adequadamente.
             throw new IllegalArgumentException("CPF inválido: Deve conter exatamente 11 dígitos numéricos.");
         }
     }
@@ -104,6 +110,10 @@ public class Usuario {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+    
+    public void setTipo(TipoUsuario tipo){ 
+        this.tipo = tipo;
     }
 
     // --- Métodos de Comportamento e Utilitários ---
@@ -134,7 +144,7 @@ public class Usuario {
         } else if (this.senha.equals(senhaNova)) {
             System.out.println("Erro: A nova senha não pode ser igual à senha atual.");
         } else {
-            this.senha = senhaNova; // Em produção, a nova senha seria hasheada e salgada aqui.
+            this.senha = senhaNova;
             System.out.println("Senha alterada com sucesso.");
         }
     }
@@ -167,15 +177,15 @@ public class Usuario {
      */
     @Override
     public String toString() {
-        // Removida a linha de comentário para evitar erro de compilação.
-        // A senha não é incluída para não expor informações sensíveis.
+        // Incluindo o tipo do usuário na representação em String
         return "Usuario{"
                 + "id=" + id +
                 ", nome='" + nome + '\'' +
-                ", cpf='" + getCpfPseudoanonimizado() + '\'' + // Usa o método pseudoanonimizado
+                ", cpf='" + getCpfPseudoanonimizado() + '\'' +
                 ", endereco='" + endereco + '\'' +
                 ", email='" + email + '\'' +
                 ", telefone='" + telefone + '\'' +
+                ", tipo='" + tipo.getDescricao() + '\'' + 
                 '}';
     }
 
@@ -187,12 +197,12 @@ public class Usuario {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Usuario usuario = (Usuario) o;
-        return id == usuario.id; // Usuários são iguais se tiverem o mesmo ID
+        return id == usuario.id; // Usuários são considerados iguais se tiverem o mesmo ID
     }
 
     @Override
     public int hashCode() {
-        return id; // O hash code pode ser baseado no ID único
+        return id; // O hash code pode ser baseado no ID único para consistência com equals
     }
 }
 

@@ -4,6 +4,8 @@
  */
 package models;
 
+import models.enums.TipoUsuario;
+
 /**
  *
  * @author marcos_miller
@@ -14,8 +16,8 @@ package models;
 public class Gerente extends Atendente {
     
     //chama o construtor de usuario 
-    public Gerente(String nome, String cpf, String endereco, String email, String telefone, String senha) {
-        super(nome, cpf, endereco, email, telefone, senha);
+    public Gerente(String nome, String cpf, String endereco, String email, String telefone, TipoUsuario tipo, String senha) {
+        super(nome, cpf, endereco, email, telefone,tipo, senha);
     }
 
     //metodos para cadastro de um usuário

@@ -1,0 +1,22 @@
+[
+  {
+    "id": 2,
+    "nome": "camila",
+    "cpf": "12345678911",
+    "endereco": "kkk",
+    "email": "lala",
+    "telefone": "444",
+    "tipo": "ATENDENTE",
+    "senha": "222"
+  },
+  {
+    "id": 4,
+    "nome": "marcos",
+    "cpf": "12345678915",
+    "endereco": "hehe",
+    "email": "hii",
+    "telefone": "999",
+    "tipo": "GERENTE",
+    "senha": "123"
+  }
+]

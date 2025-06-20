@@ -4,6 +4,8 @@
  */
 package models;
 
+import models.enums.TipoUsuario;
+
 
 /**
  *
@@ -14,8 +16,8 @@ package models;
 public class Atendente extends Usuario { 
     
     //construtor referenciando a classe pai com SUPER
-    public Atendente(String nome, String cpf, String endereco, String email, String telefone, String senha){
-        super(nome, cpf, endereco, email, telefone, senha);
+    public Atendente(String nome, String cpf, String endereco, String email, String telefone, TipoUsuario tipo, String senha){
+        super(nome, cpf, endereco, email, telefone, tipo, senha);
     }
     
     //métodos principais da nossa classe
