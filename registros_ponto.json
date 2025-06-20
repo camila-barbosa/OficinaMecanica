@@ -28,5 +28,22 @@
         "nano": 580747424
       }
     }
+  },
+  {
+    "id": 2,
+    "idUsuario": 4,
+    "dataHoraEntrada": {
+      "date": {
+        "year": 2025,
+        "month": 6,
+        "day": 20
+      },
+      "time": {
+        "hour": 15,
+        "minute": 43,
+        "second": 44,
+        "nano": 549701764
+      }
+    }
   }
 ]
