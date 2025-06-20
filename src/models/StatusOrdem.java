@@ -9,6 +9,7 @@ package models;
  * @author camila_barbosa
  */
 public enum StatusOrdem {
+    //adicionar aguardando diag
     EM_DIAGNOSTICO, //Veículo está sendo avaliado 
     AGUARDANDO_LIBERACAO, //Aguardando aprovação do serviço pelo cliente
     EM_EXECUCAO, //Serviço está em andamento

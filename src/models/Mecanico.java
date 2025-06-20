@@ -94,7 +94,7 @@ public class Mecanico extends Usuario {
     servicosIniciais.add(diagnostico);
 
     //Calcula preço total inicial (apenas o diagnóstico)
-    double precoTotalInicial = servicosIniciais.stream()
+    double precoTotalInicial = servicosIniciais.stream() //alterar para orçamento
             .mapToDouble(Servico::getPreco)
             .sum();
 
