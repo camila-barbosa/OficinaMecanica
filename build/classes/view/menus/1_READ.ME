@@ -1,0 +1,20 @@
+# Pacote `view.menus`
+
+**Responsabilidade:** Menus de Navegação Específicos por Perfil de Usuário.
+
+Este subpacote organiza as classes de menu que fornecem as **opções de navegação e funcionalidades** 
+para cada tipo específico de usuário (ator do sistema). Cada classe de menu é responsável por exibir um conjunto 
+de opções e rotear a escolha do usuário para o serviço de negócio apropriado.
+
+**O que você encontrará aqui:**
+
+* **Menus por ator:** Classes de menu personalizadas para Gerentes, Atendentes, Mecânicos, etc.
+* **Exibição de opções:** Métodos para listar as funcionalidades disponíveis.
+* **Processamento de escolha:** Roteamento da opção selecionada para os serviços de negócio.
+
+**Exemplos de classes:** `MenuGerente`, `MenuAtendente` (futuro), `MenuMecanico` (futuro).
+
+**Princípios Adotados:**
+* **Separação de Responsabilidades (SRP):** Cada menu foca nas opções de um único perfil.
+* **Baixo Acoplamento:** Delega para a camada `service`.
+* **Polimorfismo (potencial):** Menus poderiam implementar uma interface comum.
