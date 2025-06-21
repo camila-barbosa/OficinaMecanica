@@ -190,7 +190,7 @@ public class PainelPrincipal {
         switch (opcao) {
             case 1:
                 System.out.println("Abrindo Gerenciamento de Usuários...");
-                MenuUsuario menuUsuarioGerente = new MenuUsuario(usuarioCRUD, scanner);
+                ComponenteMenuUsuario menuUsuarioGerente = new ComponenteMenuUsuario(usuarioCRUD, scanner);
                 menuUsuarioGerente.exibirMenu(); // Entra no loop do MenuUsuario
                 break;
             case 2:
