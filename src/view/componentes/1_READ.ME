@@ -1,0 +1,20 @@
+# Pacote `view.componentes`
+
+**Responsabilidade:** Componentes de Interface de Usuário Reutilizáveis.
+
+Este subpacote agrupa classes que representam **partes menores e reutilizáveis da interface do usuário** (`view`). 
+Eles são como "blocos de construção" visuais que podem ser montados em painéis maiores, encapsulando a lógica de exibição 
+e interação para uma funcionalidade específica.
+
+**O que você encontrará aqui:**
+
+* **Módulos de UI:** Componentes que podem ser plugados em diferentes painéis.
+* **Lógica de interação específica:** Gerenciam a entrada do usuário para sua funcionalidade e delegam a ação para a camada de serviço.
+
+**Exemplos de classes:** `ComponentePonto`, `CompGerenciarOS` (futuro), `CompGerenciarEstoque` (futuro), 
+`CompGerenciarUsuario` (futuro, seu `MenuUsuario` renomeado).
+
+**Princípios Adotados:**
+* **Composição:** Painéis maiores são "compostos" por esses componentes.
+* **Reuso:** Um componente pode ser usado em múltiplos painéis.
+* **Encapsulamento:** Detalhes de exibição e lógica específica do componente são isolados.

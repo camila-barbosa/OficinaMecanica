@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "codigo": "OS-250621021727-c92f",
+    "dataAbertura": {
+      "date": {
+        "year": 2025,
+        "month": 6,
+        "day": 21
+      },
+      "time": {
+        "hour": 2,
+        "minute": 17,
+        "second": 27,
+        "nano": 714765490
+      }
+    },
+    "precoTotal": 0,
+    "idVeiculo": 1,
+    "idCliente": 1,
+    "idMecanicoResponsavel": 5,
+    "status": "EM_DIAGNOSTICO",
+    "servicos": [],
+    "observadores": []
+  }
+]

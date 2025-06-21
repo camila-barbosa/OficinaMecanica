@@ -1,0 +1,19 @@
+# Pacote `util`
+
+**Responsabilidade:** Utilitários e Ferramentas de Apoio.
+
+Este pacote agrupa classes que fornecem **funcionalidades de apoio e utilitárias** que não se encaixam diretamente 
+nas outras camadas e são de natureza genérica ou transversal.
+
+**O que você encontrará aqui:**
+
+* **Manipulação de arquivos JSON:** Classe para serializar e desserializar objetos Java em/de arquivos JSON.
+* **Gerenciamento de sessão:** Singleton para gerenciar o usuário atualmente logado no sistema.
+* **Funções auxiliares:** Qualquer outra função ou classe que seja de uso geral e não específica de domínio, 
+negócio ou interface.
+
+**Exemplos de classes:** `JsonFileHandler`, `UserSession`, `LocalDateTimeAdapter`, `AuthService`.
+
+**Princípios Adotados:**
+* **Reuso:** Classes genéricas e reutilizáveis por várias partes do sistema.
+* **Separação de Responsabilidades (SRP):** Isola funcionalidades de apoio.
