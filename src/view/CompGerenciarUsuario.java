@@ -17,7 +17,7 @@ import service.UsuarioService;
  *
  * @author marcos_miller
  */
-public class ComponenteMenuUsuario {
+public class CompGerenciarUsuario {
 
     private UsuarioService usuarioService;
     private Scanner scanner;
@@ -26,7 +26,7 @@ public class ComponenteMenuUsuario {
      * Construtor do MenuUsuario.
      * @param usuarioCRUD Instância do UsuarioCRUD, que será usada para inicializar o UsuarioService.
      */
-    public ComponenteMenuUsuario(UsuarioCRUD usuarioCRUD, Scanner scanner) {
+    public CompGerenciarUsuario(UsuarioCRUD usuarioCRUD, Scanner scanner) {
         this.usuarioService = new UsuarioService(usuarioCRUD);
         this.scanner = scanner;
         System.out.println("Menu de Gerenciamento de Usuários iniciado.");
