@@ -7,9 +7,9 @@ package models;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import models.enums.StatusOrdem;
 import models.enums.TipoUsuario;
 
 /**
@@ -100,7 +100,7 @@ public class Mecanico extends Usuario {
 
     OrdemServico os = new OrdemServico(
         gerarCodigoOS(),           
-        new Date(),                
+        LocalDateTime.now(),
         precoTotalInicial,         
         veiculo,                  
         cliente,                   

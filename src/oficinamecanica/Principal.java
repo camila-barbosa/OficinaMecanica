@@ -12,7 +12,7 @@ import repository.UsuarioCRUD;
 import service.RegistroPontoService;
 import util.AuthService;
 import util.UserSession;
-import view.MenuUsuario;
+import view.ComponenteMenuUsuario;
 import view.componentes.ComponentePonto;
 
 /**
@@ -27,7 +27,7 @@ public class Principal {
     private static UsuarioCRUD usuarioCRUD = new UsuarioCRUD();
     private static PontoRepository pontoRepository = new PontoRepository();
     private static Scanner scanner = new Scanner(System.in);
-
+    
     public static void main(String[] args) {
         System.out.println("Iniciando Sistema de Gerenciamento da Oficina...");
 
@@ -74,8 +74,8 @@ public class Principal {
                 }
                 System.out.println("---------------------------------------------"); // Separador após o ponto
 
-                // Continua para o menu específico (MenuUsuario por enquanto)
-                MenuUsuario menuAtendente = new MenuUsuario(usuarioCRUD, scanner);
+                // Continua para o menu específico (ComponenteMenuUsuario por enquanto)
+                ComponenteMenuUsuario menuAtendente = new ComponenteMenuUsuario(usuarioCRUD, scanner);
                 menuAtendente.exibirMenu();
                 break;
             case GERENTE:
