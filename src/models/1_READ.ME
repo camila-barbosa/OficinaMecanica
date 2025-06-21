@@ -1,0 +1,21 @@
+
+# Pacote `models`
+
+**Responsabilidade:** Camada de Domínio / Entidades de Negócio.
+
+Este pacote contém as classes que representam as **entidades (modelos de dados)** centrais do sistema da oficina. São objetos que encapsulam dados e comportamentos intrínsecos a si mesmos, refletindo o mundo real do negócio.
+
+**O que você encontrará aqui:**
+
+* **Definição dos dados:** Quais são as características (atributos) de cada entidade.
+* **Comportamentos intrínsecos:** Métodos que definem o que a própria entidade "pode fazer" ou "sabe sobre si mesma" (ex: `Usuario.fazerLogin()`, `OrdemServico.calcularTotal()`).
+* **Validações de dados intrínsecas:** Regras que garantem a integridade dos atributos do próprio objeto (ex: `Usuario.setCpf()` valida o formato do CPF).
+* **Associações entre entidades:** Referências a outras entidades (geralmente por ID) que representam relacionamentos no domínio.
+
+**Exemplos de classes:** `Usuario`, `Cliente`, `Veiculo`, `OrdemServico`, `Servico`, `RegistroPonto`, `ItemEstoque`, `Pagamento`.
+
+**Princípios Adotados:**
+* **Encapsulamento:** Atributos são privados e acessados via getters/setters.
+* **Alta Coesão:** Cada classe se preocupa apenas com a representação de uma única entidade.
+
+**Não contém:** Lógica de interface de usuário, regras de negócio que envolvem múltiplos objetos, ou operações de persistência de dados.

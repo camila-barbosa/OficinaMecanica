@@ -1,0 +1,21 @@
+# Pacote `repository`
+
+**Responsabilidade:** Camada de Acesso e Gerenciamento de Coleções de Dados.
+
+Este pacote contém as classes de **repositório (CRUDS)**, responsáveis por gerenciar coleções de objetos de domínio (`models`) 
+em memória e orquestrar sua persistência em arquivos. 
+Eles atuam como um intermediário entre a camada de serviço (`service.business`) e o armazenamento de dados 
+(atualmente arquivos JSON via `util.JsonFileHandler`).
+
+**O que você encontrará aqui:**
+
+* **Gerenciamento de coleções:** Manutenção de listas de objetos (ex: `List<Usuario>`).
+* **Operações CRUD básicas:** Métodos para adicionar, buscar (por ID, email, CPF, etc.), atualizar e remover objetos da coleção.
+* **Persistência de dados:** Utilização de `util.JsonFileHandler` para carregar dados do arquivo ao iniciar e salvar dados no arquivo após modificações.
+
+**Exemplos de classes:** `UsuarioCRUD`, `PontoRepository`, `OrdemServicoRepository`, `ClienteRepository`, `VeiculoRepository`.
+
+**Princípios Adotados:**
+* **Separação de Responsabilidades (SRP):** Foca apenas na gestão da coleção e persistência, sem lógica de negócio complexa ou interação com o usuário.
+* **Encapsulamento:** A lista interna de objetos é privada.
+* **Reuso:** Utiliza `util.JsonFileHandler` para a lógica de persistência genérica.

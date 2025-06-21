@@ -1,0 +1,19 @@
+# Pacote `observers`
+
+**Responsabilidade:** Implementação do Padrão de Projeto Observer.
+
+Este pacote contém as interfaces e classes relacionadas à aplicação do **Padrão de Projeto Observer**. 
+Este padrão permite que objetos (observadores) sejam notificados automaticamente sobre mudanças de estado 
+em outros objetos (observáveis), sem que os observáveis precisem conhecer a estrutura concreta dos observadores.
+
+**O que você encontrará aqui:**
+
+* **Interfaces do Observador (`IObservadorXyz`):** Define o contrato para classes que desejam ser notificadas sobre eventos.
+* **Interfaces do Observável (`IObservavelXyz`):** Define o contrato para classes que podem ser "observadas" e que enviarão notificações.
+* **Implementações de Observadores (futuras):** Classes que reagirão a eventos (ex: um painel que atualiza ao receber notificação de uma `OrdemServico`).
+
+**Exemplos de classes/interfaces:** `IObservavelOrdemServico`, `IObservadorOrdemServico`.
+
+**Princípios Adotados:**
+* **Baixo Acoplamento:** Observáveis e observadores interagem sem conhecer seus detalhes internos.
+* **Extensibilidade:** Novos observadores podem ser adicionados sem modificar o observável.

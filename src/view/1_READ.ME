@@ -1,0 +1,20 @@
+# Pacote `view`
+
+**Responsabilidade:** Camada de Apresentação / Interface do Usuário.
+
+Este pacote contém as classes responsáveis pela **interação com o usuário**. Elas exibem informações no console, 
+coletam a entrada do usuário e delegam as ações para a camada de serviço de negócio.
+
+**O que você encontrará aqui:**
+
+* **Menus principais e específicos:** Classes que organizam e exibem as opções de navegação.
+* **Componentes de UI:** Partes da interface que são reutilizáveis em diferentes painéis.
+* **Coleta de entrada:** Leitura de dados digitados pelo usuário.
+* **Exibição de resultados:** Apresentação de informações e mensagens de sucesso/erro ao usuário.
+
+**Exemplos de classes:** `PainelPrincipal`
+
+**Princípios Adotados:**
+* **Separação de Responsabilidades (SRP):** Foca exclusivamente na interação com o usuário.
+* **Baixo Acoplamento:** Delega a lógica de negócio para a camada `service.business`.
+* **Reuso:** Componentes e menus podem ser reutilizados em diferentes painéis.
