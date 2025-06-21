@@ -7,7 +7,11 @@ package view.menus;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import repository.UsuarioCRUD;
+import service.ClienteService;
+import service.OrdemServicoService;
 import service.UsuarioService;
+import service.VeiculoService;
+import view.componentes.CompGerenciarOS;
 import view.componentes.CompGerenciarUsuario;
 
 /**
@@ -17,19 +21,32 @@ import view.componentes.CompGerenciarUsuario;
 public class MenuGerente {
 
     private UsuarioService usuarioService;
+    private OrdemServicoService ordemServicoService;
+    private ClienteService clienteService;
+    private VeiculoService veiculoService;
+    private UsuarioCRUD usuarioCRUD; // MANTIDO: Atributo para compatibilidade com o construtor do CompGerenciarUsuario no case 1
     private Scanner scanner;
-    private UsuarioCRUD usuarioCRUD;
 
     /**
      * Construtor do MenuGerente.
-     * Recebe as dependências necessárias para suas operações.
-     * @param usuarioCRUD O CRUD de usuários.
+     * Recebe todas as dependências necessárias para suas operações.
+     *
+     * @param usuarioCRUD O CRUD de usuários (necessário aqui para passar ao CompGerenciarUsuario).
      * @param scanner O scanner para entrada do usuário.
+     * @param usuarioService O serviço de negócio para usuários.
+     * @param ordemServicoService O serviço de ordens de serviço.
+     * @param clienteService O serviço de clientes.
+     * @param veiculoService O serviço de veículos.
      */
-    public MenuGerente(UsuarioCRUD usuarioCRUD, Scanner scanner) {
-        this.usuarioCRUD = usuarioCRUD;
-        this.usuarioService = new UsuarioService(usuarioCRUD); 
+    public MenuGerente(UsuarioCRUD usuarioCRUD, Scanner scanner, UsuarioService usuarioService, // UsuarioCRUD é um parâmetro
+                       OrdemServicoService ordemServicoService, ClienteService clienteService,
+                       VeiculoService veiculoService) {
+        this.usuarioCRUD = usuarioCRUD; // Inicializa o atributo usuarioCRUD
         this.scanner = scanner;
+        this.usuarioService = usuarioService;
+        this.ordemServicoService = ordemServicoService;
+        this.clienteService = clienteService;
+        this.veiculoService = veiculoService;
     }
 
     /**
@@ -42,12 +59,13 @@ public class MenuGerente {
             System.out.println("1. Gerenciar Usuários");
             System.out.println("2. Gerenciar Estoque (Ainda não implementado)");
             System.out.println("3. Acessar Relatórios Financeiros (Ainda não implementado)");
+            System.out.println("4. Gerenciar Ordens de Serviço"); // Opção para OS
             System.out.println("0. Voltar ao Painel Principal");
             System.out.print("Escolha uma opção: ");
 
             try {
                 opcao = scanner.nextInt();
-                scanner.nextLine();
+                scanner.nextLine(); // Consome a nova linha
             } catch (InputMismatchException e) {
                 System.err.println("Entrada inválida. Por favor, digite um número.");
                 scanner.nextLine();
@@ -67,16 +85,26 @@ public class MenuGerente {
         switch (opcao) {
             case 1:
                 System.out.println("\n--- Abrindo Gerenciamento de Usuários ---");
-                // Agora 'this.usuarioCRUD' é acessível, pois é um atributo da classe
-                CompGerenciarUsuario menuUsuario = new CompGerenciarUsuario(this.usuarioCRUD, this.scanner); 
-                menuUsuario.exibirMenu();
+                // *** SUA LINHA ESPECÍFICA MANTIDA AQUI ***
+                CompGerenciarUsuario compGerenciarUsuario = new CompGerenciarUsuario(this.usuarioCRUD, this.scanner);
+                compGerenciarUsuario.exibirMenu();
                 System.out.println("\n--- Retornando ao Menu do Gerente ---");
                 break;
             case 2:
                 System.out.println("Funcionalidade 'Gerenciar Estoque' ainda não implementada.");
+                // Futuramente: new CompGerenciarEstoque(estoqueService, scanner).exibirMenu();
                 break;
             case 3:
                 System.out.println("Funcionalidade 'Acessar Relatórios Financeiros' ainda não implementada.");
+                // Futuramente: new CompGerenciarRelatorios(relatorioService, scanner).exibirMenu();
+                break;
+            case 4:
+                System.out.println("\n--- Abrindo Gerenciamento de Ordens de Serviço ---");
+                CompGerenciarOS compGerenciarOS = new CompGerenciarOS(
+                    this.ordemServicoService, this.clienteService, this.veiculoService, this.usuarioService, this.scanner
+                );
+                compGerenciarOS.exibirMenu();
+                System.out.println("\n--- Retornando ao Menu do Gerente ---");
                 break;
             case 0:
                 System.out.println("Voltando ao Painel Principal.");

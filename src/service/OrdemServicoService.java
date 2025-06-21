@@ -6,11 +6,14 @@ package service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import models.Cliente;
 import models.OrdemServico;
 import models.Servico;
 import models.Usuario;
+import models.Veiculo;
 import models.enums.StatusOrdem;
 import repository.OrdemServicoRepository;
 import repository.UsuarioCRUD;
@@ -22,25 +25,27 @@ import repository.UsuarioCRUD;
 public class OrdemServicoService {
 
     private OrdemServicoRepository ordemServicoRepository; // Repositório de OS
-    private UsuarioCRUD usuarioCRUD; // Para buscar mecânicos por ID, por exemplo
-    // Futuras dependências para validações e buscas:
-    // private ClienteService clienteService; // Para buscar Cliente
-    // private VeiculoService veiculoService; // Para buscar Veículo
-    // private ServicoService servicoService; // Para buscar Serviços (se tiver um service dedicado)
+    private UsuarioCRUD usuarioCRUD; // Para buscar mecânicos (ou seria UsuarioService)
+    private ClienteService clienteService; // ATRIBUTO NOVO!
+    private VeiculoService veiculoService; // ATRIBUTO NOVO!
+    // private ServicoService servicoService; // Futura dependência se tiver um service para Servico
 
     /**
      * Construtor do OrdemServicoService.
      * @param ordemServicoRepository O repositório de Ordens de Serviço.
      * @param usuarioCRUD O CRUD de usuários (para acessar mecânicos).
-     * // Futuramente: @param clienteService O serviço de clientes.
-     * // Futuramente: @param veiculoService O serviço de veículos.
+     * @param clienteService O serviço de clientes (para validar existência de cliente por ID).
+     * @param veiculoService O serviço de veículos (para validar existência de veículo por ID).
+     * // Futuramente: @param servicoService O serviço de serviços.
      */
-    public OrdemServicoService(OrdemServicoRepository ordemServicoRepository, UsuarioCRUD usuarioCRUD) {
+    public OrdemServicoService(OrdemServicoRepository ordemServicoRepository,
+                               UsuarioCRUD usuarioCRUD,
+                               ClienteService clienteService,   // NOVO PARÂMETRO!
+                               VeiculoService veiculoService) { // NOVO PARÂMETRO!
         this.ordemServicoRepository = ordemServicoRepository;
         this.usuarioCRUD = usuarioCRUD;
-        // Futuramente:
-        // this.clienteService = clienteService;
-        // this.veiculoService = veiculoService;
+        this.clienteService = Objects.requireNonNull(clienteService, "ClienteService não pode ser nulo.");
+        this.veiculoService = Objects.requireNonNull(veiculoService, "VeiculoService não pode ser nulo.");
     }
 
     /**
@@ -51,21 +56,21 @@ public class OrdemServicoService {
      * @param idMecanicoResponsavel ID do mecânico responsável inicial pela OS.
      * @return A OrdemServico criada.
      * @throws IllegalArgumentException Se cliente, veículo ou mecânico não forem encontrados.
-     * @throws IllegalStateException Se a OS já existe (embora o código seja único, um ID novo é sempre gerado).
      */
     public OrdemServico criarNovaOrdemServico(int idCliente, int idVeiculo, int idMecanicoResponsavel)
                                               throws IllegalArgumentException {
         // --- Validações de Negócio ---
-        // 1. Verificar se Cliente existe (usando UsuarioCRUD como placeholder para ClienteRepository/Service)
-        // AQUI VOCÊ USARIA O ClienteService.buscarClientePorId(idCliente)
-        // Por enquanto, apenas um placeholder para ilustrar.
-        // Optional<Cliente> clienteOpt = clienteService.buscarClientePorId(idCliente);
-        // if (clienteOpt.isEmpty()) { throw new IllegalArgumentException("Cliente com ID " + idCliente + " não encontrado."); }
+        // 1. Verificar se Cliente existe (AGORA USA clienteService)
+        Optional<Cliente> clienteOpt = clienteService.buscarClientePorId(idCliente); // USANDO O SERVICE!
+        if (clienteOpt.isEmpty()) {
+            throw new IllegalArgumentException("Cliente com ID " + idCliente + " não encontrado.");
+        }
 
-        // 2. Verificar se Veículo existe (usando UsuarioCRUD como placeholder para VeiculoRepository/Service)
-        // AQUI VOCÊ USARIA O VeiculoService.buscarVeiculoPorId(idVeiculo)
-        // Optional<Veiculo> veiculoOpt = veiculoService.buscarVeiculoPorId(idVeiculo);
-        // if (veiculoOpt.isEmpty()) { throw new IllegalArgumentException("Veículo com ID " + idVeiculo + " não encontrado."); }
+        // 2. Verificar se Veículo existe (AGORA USA veiculoService)
+        Optional<Veiculo> veiculoOpt = veiculoService.buscarVeiculoPorId(idVeiculo); // USANDO O SERVICE!
+        if (veiculoOpt.isEmpty()) {
+            throw new IllegalArgumentException("Veículo com ID " + idVeiculo + " não encontrado.");
+        }
 
         // 3. Verificar se Mecânico existe e é do tipo MECANICO
         Optional<Usuario> mecanicoOpt = usuarioCRUD.buscarUsuarioPorIdOptional(idMecanicoResponsavel);
@@ -73,7 +78,7 @@ public class OrdemServicoService {
             throw new IllegalArgumentException("Mecânico com ID " + idMecanicoResponsavel + " não encontrado ou não é um mecânico válido.");
         }
         
-        // --- Geração do Código da OS (Pode ser mais sofisticada) ---
+        // --- Geração do Código da OS ---
         String codigoOS = "OS-" + LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyMMddHHmmss")) + "-" + UUID.randomUUID().toString().substring(0, 4);
 
         // --- Criação do Objeto OrdemServico ---
@@ -86,11 +91,6 @@ public class OrdemServicoService {
             StatusOrdem.AGUARDANDO_DIAGNOSTICO // Status inicial da OS
         );
 
-        // Adiciona um serviço inicial de diagnóstico (se aplicável ao fluxo de vocês)
-        // Você precisaria de um ServicoService ou métodos para criar Servico
-        // Servico diagnostico = new Servico("DIAG", "Diagnóstico Inicial", new BigDecimal("50.00"), "Diagnóstico");
-        // novaOS.adicionarServico(diagnostico);
-
         // --- Persistência ---
         ordemServicoRepository.adicionarOrdemServico(novaOS);
         System.out.println("Nova Ordem de Serviço criada: " + novaOS.getCodigo());
@@ -101,8 +101,9 @@ public class OrdemServicoService {
      * Altera o status de uma Ordem de Serviço.
      * @param idOs ID da Ordem de Serviço.
      * @param novoStatus O novo status a ser aplicado.
+     * @return A OrdemServico atualizada.
      * @throws IllegalArgumentException Se a OS não for encontrada.
-     * @throws IllegalStateException Se a transição de status não for permitida (lógica a ser implementada).
+     * @throws IllegalStateException Se a transição de status não for permitida.
      */
     public OrdemServico alterarStatusOrdemServico(int idOs, StatusOrdem novoStatus)
                                                  throws IllegalArgumentException, IllegalStateException {
@@ -112,12 +113,16 @@ public class OrdemServicoService {
         }
         OrdemServico os = osOpt.get();
 
-        // --- Lógica de Validação de Transição de Status (Padrão State ou regras simples) ---
-        // Exemplo simples:
+        Objects.requireNonNull(novoStatus, "Novo status não pode ser nulo.");
+
+        // --- Lógica de Validação de Transição de Status ---
         if (os.getStatus() == StatusOrdem.FINALIZADA || os.getStatus() == StatusOrdem.CANCELADA) {
-            throw new IllegalStateException("Não é possível alterar o status de uma OS " + os.getStatus().getDescricao() + ".");
+            throw new IllegalStateException("Não é possível alterar o status de uma OS " + os.getStatus().getDescricao() + " (já está finalizada ou cancelada).");
         }
-        // Outras regras: Ex: EM_DIAGNOSTICO -> AGUARDANDO_LIBERACAO (não pode pular para FINALIZADA)
+        // Exemplo de regras de transição mais complexas:
+        // if (os.getStatus() == StatusOrdem.AGUARDANDO_DIAGNOSTICO && novoStatus == StatusOrdem.EM_EXECUCAO) {
+        //     throw new IllegalStateException("Não pode ir de Diagnóstico para Execução diretamente.");
+        // }
         
         os.alterarStatus(novoStatus); // O método da OS já notifica observadores
         ordemServicoRepository.atualizarOrdemServico(os); // Persiste a mudança de status
@@ -129,18 +134,19 @@ public class OrdemServicoService {
      * @param idOs ID da Ordem de Serviço.
      * @param servico O objeto Servico a ser adicionado.
      * @return A Ordem de Serviço atualizada.
-     * @throws IllegalArgumentException Se a OS não for encontrada.
+     * @throws IllegalArgumentException Se a OS não for encontrada ou o serviço for nulo.
      * @throws IllegalStateException Se a OS não estiver em um status que permite adição de serviços.
      */
     public OrdemServico adicionarServicoNaOrdem(int idOs, Servico servico)
                                               throws IllegalArgumentException, IllegalStateException {
+        Objects.requireNonNull(servico, "Serviço a ser adicionado não pode ser nulo.");
+
         Optional<OrdemServico> osOpt = ordemServicoRepository.buscarOrdemServicoPorId(idOs);
         if (osOpt.isEmpty()) {
             throw new IllegalArgumentException("Ordem de Serviço com ID " + idOs + " não encontrada.");
         }
         OrdemServico os = osOpt.get();
 
-        // Validação: Adicionar serviços só em status que fazem sentido (ex: não FINALIZADA ou CANCELADA)
         if (os.getStatus() == StatusOrdem.FINALIZADA || os.getStatus() == StatusOrdem.CANCELADA || os.getStatus() == StatusOrdem.AGUARDANDO_PAGAMENTO) {
             throw new IllegalStateException("Não é possível adicionar serviços a uma OS com status " + os.getStatus().getDescricao() + ".");
         }
@@ -155,11 +161,13 @@ public class OrdemServicoService {
      * @param idOs ID da Ordem de Serviço.
      * @param servico O objeto Servico a ser removido.
      * @return A Ordem de Serviço atualizada.
-     * @throws IllegalArgumentException Se a OS não for encontrada.
+     * @throws IllegalArgumentException Se a OS não for encontrada ou o serviço for nulo ou não estiver na OS.
      * @throws IllegalStateException Se a OS não estiver em um status que permite remoção de serviços.
      */
     public OrdemServico removerServicoDaOrdem(int idOs, Servico servico)
                                             throws IllegalArgumentException, IllegalStateException {
+        Objects.requireNonNull(servico, "Serviço a ser removido não pode ser nulo.");
+
         Optional<OrdemServico> osOpt = ordemServicoRepository.buscarOrdemServicoPorId(idOs);
         if (osOpt.isEmpty()) {
             throw new IllegalArgumentException("Ordem de Serviço com ID " + idOs + " não encontrada.");
@@ -194,12 +202,20 @@ public class OrdemServicoService {
         return ordemServicoRepository.listarTodasOrdens();
     }
     
-    // Métodos para listar ordens por status, por mecânico, etc.
-    // seriam adicionados aqui, delegando para o repository.
+    /**
+     * Lista ordens de serviço por ID do mecânico responsável.
+     * @param idMecanico ID do mecânico.
+     * @return Lista de ordens de serviço atribuídas ao mecânico.
+     */
     public List<OrdemServico> listarOrdensPorMecanico(int idMecanico) {
         return ordemServicoRepository.listarOrdensPorMecanico(idMecanico);
     }
 
+    /**
+     * Lista ordens de serviço por ID do cliente.
+     * @param idCliente ID do cliente.
+     * @return Lista de ordens de serviço para o cliente.
+     */
     public List<OrdemServico> listarOrdensPorCliente(int idCliente) {
         return ordemServicoRepository.listarOrdensPorCliente(idCliente);
     }

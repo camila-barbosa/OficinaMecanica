@@ -7,9 +7,16 @@ package oficinamecanica; // Seu pacote principal, que contém a classe Main/Prin
 import java.util.Scanner;
 import models.Usuario;
 import models.enums.TipoUsuario;
+import repository.ClienteRepository;
+import repository.OrdemServicoRepository;
 import repository.PontoRepository;
 import repository.UsuarioCRUD;
+import repository.VeiculoRepository;
+import service.ClienteService;
+import service.OrdemServicoService;
 import service.RegistroPontoService;
+import service.UsuarioService;
+import service.VeiculoService;
 import util.AuthService;
 import util.UserSession;
 import view.componentes.CompGerenciarUsuario;
@@ -25,36 +32,41 @@ import view.componentes.CompPonto;
  */
 public class Principal {
 
-    // Instâncias estáticas dos repositórios e scanner, acessíveis em toda a classe Main
     private static UsuarioCRUD usuarioCRUD = new UsuarioCRUD();
     private static PontoRepository pontoRepository = new PontoRepository();
+    private static OrdemServicoRepository ordemServicoRepository = new OrdemServicoRepository();
+    private static ClienteRepository clienteRepository = new ClienteRepository();
+    private static VeiculoRepository veiculoRepository = new VeiculoRepository();
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         System.out.println("Iniciando Sistema de Gerenciamento da Oficina...");
+
         AuthService authService = new AuthService(usuarioCRUD, scanner);
-        
-        // Tenta realizar o login do usuário
         Usuario usuarioLogado = authService.login();
 
-        // Verifica se o login foi bem-sucedido
         if (usuarioLogado != null) {
-            // Se o login for bem-sucedido, define o usuário na UserSession
             UserSession.getInstance().setLoggedInUser(usuarioLogado);
             System.out.println("\nLogin realizado com sucesso! Bem-vindo(a), " + usuarioLogado.getNome() + "!");
-            
-            // --- AQUI É ONDE O CONTROLE É PASSADO PARA O PainelPrincipal ---
-            // Instancia o serviço de ponto e o PainelPrincipal, passando as dependências
+
+            // Instanciar os serviços de negócio principais
+            UsuarioService usuarioService = new UsuarioService(usuarioCRUD);
+            ClienteService clienteService = new ClienteService(clienteRepository, veiculoRepository);
+            VeiculoService veiculoService = new VeiculoService(veiculoRepository, clienteRepository);
             RegistroPontoService pontoService = new RegistroPontoService(pontoRepository);
-            PainelPrincipal painelPrincipal = new PainelPrincipal(usuarioCRUD, pontoService, scanner);
-            painelPrincipal.exibirPainel(); // Inicia o loop principal do painel
-            
+            OrdemServicoService ordemServicoService = new OrdemServicoService(
+                ordemServicoRepository, usuarioCRUD, clienteService, veiculoService
+            );
+
+            // Instanciar e exibir o PainelPrincipal
+            PainelPrincipal painelPrincipal = new PainelPrincipal(
+                usuarioCRUD, pontoService, scanner, ordemServicoService, clienteService, veiculoService, usuarioService
+            );
+            painelPrincipal.exibirPainel();
+
         } else {
-            // Se o login falhar (usuário digitou '0' para sair), encerra o sistema
             System.out.println("Não foi possível realizar o login. Encerrando o sistema.");
         }
-
-        // Fecha o scanner no final da execução do programa
         scanner.close();
     }
 }

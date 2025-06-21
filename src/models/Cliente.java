@@ -6,6 +6,7 @@ package models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * representa um cliente da oficina
@@ -13,26 +14,47 @@ import java.util.List;
  * @author barbo
  */
 public class Cliente {
-    public static int proximoId = 1; 
+    public static int proximoId = 1; // Contador estático para gerar IDs únicos
 
-    private int id;
+    private int id; // ID único do cliente
     private String nome;
     private String telefone;
     private String email;
-    private List<Veiculo> veiculos;  //perguntar pelli sobre usar private final
+    private final List<Integer> idVeiculos; // ALTERADO: Lista de IDs de veículos (int), e 'final'
 
-    //construtor
+    /**
+     * Construtor para criar um novo cliente.
+     * @param nome Nome completo do cliente (não pode ser nulo).
+     * @param telefone Telefone de contato do cliente (não pode ser nulo).
+     * @param email Email do cliente (não pode ser nulo).
+     */
     public Cliente(String nome, String telefone, String email) {
         this.id = proximoId++;
-        this.nome = nome;
-        this.telefone = telefone;
-        this.email = email;
-        this.veiculos = new ArrayList<>(); //inicia lista de veiculos
+        this.nome = Objects.requireNonNull(nome, "Nome do cliente não pode ser nulo.");
+        this.telefone = Objects.requireNonNull(telefone, "Telefone do cliente não pode ser nulo.");
+        this.email = Objects.requireNonNull(email, "Email do cliente não pode ser nulo.");
+        this.idVeiculos = new ArrayList<>(); // Inicializa a lista de IDs de veículos vazia
     }
 
-    //getters e setters
-    
-    public int getId() { 
+    /**
+     * Construtor para uso pelo Gson ao desserializar (reconstruir o objeto do JSON).
+     * @param id ID do cliente.
+     * @param nome Nome do cliente.
+     * @param telefone Telefone do cliente.
+     * @param email Email do cliente.
+     * @param idVeiculos Lista de IDs de veículos associados ao cliente.
+     */
+    public Cliente(int id, String nome, String telefone, String email, List<Integer> idVeiculos) {
+        this.id = id;
+        this.nome = Objects.requireNonNull(nome, "Nome do cliente não pode ser nulo."); // Validações também no construtor do Gson para consistência
+        this.telefone = Objects.requireNonNull(telefone, "Telefone do cliente não pode ser nulo.");
+        this.email = Objects.requireNonNull(email, "Email do cliente não pode ser nulo.");
+        // Garante que a lista de veículos seja uma nova instância, evitando problemas de referência direta do Gson
+        this.idVeiculos = (idVeiculos != null) ? new ArrayList<>(idVeiculos) : new ArrayList<>();
+    }
+
+    // --- Getters e Setters ---
+    public int getId() {
         return id;
     }
     
@@ -41,7 +63,7 @@ public class Cliente {
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        this.nome = Objects.requireNonNull(nome, "Nome do cliente não pode ser nulo.");
     }
 
     public String getTelefone() {
@@ -49,7 +71,7 @@ public class Cliente {
     }
 
     public void setTelefone(String telefone) {
-        this.telefone = telefone;
+        this.telefone = Objects.requireNonNull(telefone, "Telefone do cliente não pode ser nulo.");
     }
 
     public String getEmail() {
@@ -57,49 +79,69 @@ public class Cliente {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = Objects.requireNonNull(email, "Email do cliente não pode ser nulo.");
     }
 
     /**
-     * adiciona um veiculo na lista de veiculos do cliente
-     *
-     * @param veiculo veiculo a ser adicionado, e nao pode ser nulo
+     * Retorna uma cópia da lista de IDs de veículos do cliente.
+     * @return Uma nova lista contendo os IDs de todos os veículos do cliente.
      */
-    public void adicionarVeiculo(Veiculo veiculo) {
-        if (veiculo == null) {
-            throw new IllegalArgumentException("Veículo não pode ser nulo");
+    public List<Integer> getIdVeiculos() { // ALTERADO: Retorna List<Integer>
+        return new ArrayList<>(idVeiculos); // Retorna uma cópia para encapsulamento
+    }
+
+    /**
+     * Adiciona o ID de um veículo à lista de IDs de veículos do cliente.
+     * @param idVeiculo O ID do veículo a ser adicionado.
+     */
+    public void adicionarIdVeiculo(int idVeiculo) { // ALTERADO: Recebe int (ID)
+        if (!idVeiculos.contains(idVeiculo)) { // Verifica se já não contém o ID
+            idVeiculos.add(idVeiculo);
+            System.out.println("Cliente '" + nome + "' associado ao Veículo ID: " + idVeiculo);
+        } else {
+            System.out.println("Veículo ID " + idVeiculo + " já associado ao cliente " + nome + ".");
         }
-        veiculos.add(veiculo);
     }
 
     /**
-     * remove um veiculo na lista de veiculos do cliente
-     *
-     * @param placa Placa do veiculo que vai ser removido
-     * @return true se o veículo foi encontrado e removido e false se acontecer
-     * o contrário
+     * Remove o ID de um veículo da lista de IDs de veículos do cliente.
+     * @param idVeiculo O ID do veículo a ser removido.
+     * @return true se o ID do veículo foi encontrado e removido, false caso contrário.
      */
-    public boolean removerVeiculo(String placa) {
-        return veiculos.removeIf(v -> v.getPlaca().equalsIgnoreCase(placa));
+    public boolean removerIdVeiculo(int idVeiculo) { // ALTERADO: Recebe int (ID)
+        boolean removido = idVeiculos.remove(Integer.valueOf(idVeiculo)); // Usa Integer.valueOf para remover por valor
+        if (removido) {
+            System.out.println("Veículo ID " + idVeiculo + " removido da lista do cliente " + nome + ".");
+        }
+        return removido;
     }
     
-    /**
-     * retorna lista de veiculos do cliente
-     *
-     * @return Lista contendo todos os veiculos do cliente
-     */
-    public List<Veiculo> listarVeiculos() {
-        return new ArrayList<>(veiculos);
-    }
+    // O método 'listarVeiculos()' da sua versão anterior não faz mais sentido aqui,
+    // pois a lista guarda IDs, não objetos Veiculo. Você listaria os veículos
+    // chamando o VeiculoRepository para cada ID.
 
     @Override
     public String toString() {
         return "Cliente{"
-                + "nome='" + nome + '\''
-                + ", telefone='" + telefone + '\''
-                + ", email='" + email + '\''
-                + ", veiculos=" + veiculos
-                + '}';
+                + "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", telefone='" + telefone + '\'' +
+                ", email='" + email + '\'' +
+                ", qtdVeiculos=" + idVeiculos.size() + // Exibe a quantidade de IDs de veículos
+                '}';
     }
 
+    // Adição de equals e hashCode para garantir que Cliente possa ser comparado por ID
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cliente cliente = (Cliente) o;
+        return id == cliente.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
