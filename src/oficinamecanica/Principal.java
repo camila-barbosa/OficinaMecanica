@@ -12,9 +12,9 @@ import repository.UsuarioCRUD;
 import service.RegistroPontoService;
 import util.AuthService;
 import util.UserSession;
-import view.CompGerenciarUsuario;
+import view.componentes.CompGerenciarUsuario;
 import view.PainelPrincipal;
-import view.ComponentePonto;
+import view.componentes.CompPonto;
 
 /**
  * Ponto de entrada principal do Sistema de Gerenciamento da Oficina.
@@ -29,7 +29,7 @@ public class Principal {
     private static UsuarioCRUD usuarioCRUD = new UsuarioCRUD();
     private static PontoRepository pontoRepository = new PontoRepository();
     private static Scanner scanner = new Scanner(System.in);
-    
+
     public static void main(String[] args) {
         System.out.println("Iniciando Sistema de Gerenciamento da Oficina...");
         AuthService authService = new AuthService(usuarioCRUD, scanner);

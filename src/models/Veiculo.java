@@ -12,6 +12,9 @@ import models.enums.StatusOrdem;
  * @author camila_barbosa
  */
 public class Veiculo {
+    public static int proximoId = 1;
+    
+    private int id;
     private String placa;
     private String modelo;
     private String cor;
@@ -20,6 +23,7 @@ public class Veiculo {
     
     //construtor 
     public Veiculo (String placa, String modelo, String cor, Cliente cliente, StatusOrdem status){
+       this.id = proximoId++;
        this.placa=placa;
        this.modelo=modelo;
        this.cor=cor;
@@ -28,6 +32,11 @@ public class Veiculo {
     }
     
     //getters e setters
+    
+    public int getId() { 
+        return id;
+    }
+    
     public String getPlaca(){
         return placa;
     }
@@ -72,7 +81,8 @@ public class Veiculo {
     @Override
     public String toString() {
     return "Veiculo {" +
-           "placa='" + placa + '\'' +
+           "ID=" + id +
+           ", placa='" + placa + '\'' +
            ", modelo='" + modelo + '\'' +
            ", cor='" + cor + '\'' +
            ", cliente=" + cliente +

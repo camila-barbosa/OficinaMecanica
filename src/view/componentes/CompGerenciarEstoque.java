@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package view;
+package view.componentes;
 
 /**
  *
@@ -13,7 +13,7 @@ import java.util.Scanner;
 import models.ItemEstoque;
 import repository.EstoqueCRUD;
 
-public class MenuEstoque {
+public class CompGerenciarEstoque {
     private EstoqueCRUD estoque = new EstoqueCRUD();
     private Scanner scanner = new Scanner(System.in);
 

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package view;
+package view.componentes;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -16,7 +16,7 @@ import util.UserSession;
  *
  * @author marcos_miller
  */
-public class ComponentePonto {
+public class CompPonto {
 
     private RegistroPontoService pontoService; // Dependência do serviço de ponto
     private Scanner scanner;                   // Scanner injetado para entrada do usuário
@@ -29,7 +29,7 @@ public class ComponentePonto {
      * @param pontoService O serviço de negócio para operações de ponto.
      * @param scanner O scanner para ler a entrada do usuário.
      */
-    public ComponentePonto(RegistroPontoService pontoService, Scanner scanner) {
+    public CompPonto(RegistroPontoService pontoService, Scanner scanner) {
         this.pontoService = pontoService;
         this.scanner = scanner;
     }

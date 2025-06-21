@@ -4,6 +4,7 @@
  */
 package models;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,40 +17,64 @@ import observers.IObservadorOrdemServico;
  *Implementa o padrão Observer para notificar sobre mudanças de status
  * @author barbo
  */
-public class OrdemServico implements IObservavelOrdemServico { 
+public class OrdemServico implements IObservavelOrdemServico {
 
-    private String codigo;
-    private LocalDateTime data;
-    private Double precoTotal;
-    private Veiculo veiculo;
-    private Cliente cliente;
-    private Mecanico mecanicoResponsavel;
+    // Adição de ID único para a Ordem de Serviço
+    public static int proximoId = 1; // Assim como em Usuario e RegistroPonto
+
+    private int id; // NOVO: ID único da Ordem de Serviço
+    private String codigo; // Mantém o código, pode ser um gerado ou manual (ex: OS-001)
+    private LocalDateTime dataAbertura; // Renomeado para clareza (data de abertura)
+    private BigDecimal precoTotal; // Alterado para BigDecimal para precisão monetária
+    private int idVeiculo; // Referência por ID para o Veículo
+    private int idCliente; // Referência por ID para o Cliente
+    private int idMecanicoResponsavel; // Referência por ID para o Mecânico
     private StatusOrdem status;
-    private final List<Servico> servicos;
-    private final List<IObservadorOrdemServico> observadores;
-    
-    //construtor
-    
-    public OrdemServico(String codigo, LocalDateTime data, double precoTotal, Veiculo veiculo,
-            Cliente cliente, Mecanico mecanicoResponsavel, StatusOrdem status, List<Servico> servicos) {
+    private final List<Servico> servicos; // Lista de serviços que compõem a OS
+    private final List<IObservadorOrdemServico> observadores; // Observadores para o padrão Observer
+
+    // Construtor
+    // Refatorado para usar IDs das entidades relacionadas e BigDecimal
+    public OrdemServico(String codigo, LocalDateTime dataAbertura, int idVeiculo,
+                        int idCliente, int idMecanicoResponsavel, StatusOrdem status) {
+        this.id = proximoId++; // Atribui ID único
         this.codigo = codigo;
-        this.data = data;
-        this.precoTotal = precoTotal;
-        this.veiculo = veiculo;
-        this.cliente = cliente;
-        this.mecanicoResponsavel = mecanicoResponsavel;
+        this.dataAbertura = dataAbertura;
+        this.precoTotal = BigDecimal.ZERO; // Inicializa com zero, será calculado pelos serviços
+        this.idVeiculo = idVeiculo;
+        this.idCliente = idCliente;
+        this.idMecanicoResponsavel = idMecanicoResponsavel;
         this.status = status;
-        this.servicos = new ArrayList<>(servicos);
-        this.observadores = new ArrayList<>(); 
-        //
+        this.servicos = new ArrayList<>(); // Inicializa a lista vazia, serviços serão adicionados
+        this.observadores = new ArrayList<>();
     }
 
-    // --- MÉTODOS DO PADRÃO OBSERVER ---
+    // --- MÉTODOS PARA PERSISTÊNCIA (Gson) ---
+    // Construtor adicional para o Gson (ao carregar do JSON)
+    // Este construtor permite ao Gson reconstruir o objeto com todos os seus atributos,
+    // incluindo ID e a lista de serviços já populada. Observadores não são persistidos.
+    public OrdemServico(int id, String codigo, LocalDateTime dataAbertura, BigDecimal precoTotal,
+                        int idVeiculo, int idCliente, int idMecanicoResponsavel,
+                        StatusOrdem status, List<Servico> servicos) {
+        this.id = id;
+        this.codigo = codigo;
+        this.dataAbertura = dataAbertura;
+        this.precoTotal = precoTotal;
+        this.idVeiculo = idVeiculo;
+        this.idCliente = idCliente;
+        this.idMecanicoResponsavel = idMecanicoResponsavel;
+        this.status = status;
+        this.servicos = new ArrayList<>(servicos); // Garante que a lista é uma nova instância
+        this.observadores = new ArrayList<>(); // Observadores não são persistidos, são adicionados em tempo de execução
+    }
+
+
+    // --- MÉTODOS DO PADRÃO OBSERVER (Corretos!) ---
+    // (Mantidos como estão, pois já estão bem implementados)
 
     @Override
     public void adicionarObservador(IObservadorOrdemServico obs) {
         if (!observadores.contains(obs)) {
-            //
             observadores.add(obs);
             System.out.println("[LOG:OrdemServico " + this.codigo + "] Assinante de OS adicionado.");
         }
@@ -62,139 +87,115 @@ public class OrdemServico implements IObservavelOrdemServico {
     }
 
     @Override
-    public void notificarObservadores() { 
-        // passa sem parametros conforme a interface
-        System.out.println("[LOG:OrdemServico " + this.codigo + "] Enviando notícia de status aos assinantes...");
+    public void notificarObservadores() {
+        System.out.println("[LOG:OrdemServico " + this.codigo + "] Enviando notificação de status aos assinantes...");
         for (IObservadorOrdemServico obs : observadores) {
-            obs.notificarStatusOrdem(this); 
-            // Passa a si mesma (a OrdemServico) para o assinante.
+            obs.notificarStatusOrdem(this); // Passa a si mesma (a OrdemServico) para o assinante.
         }
     }
 
-    public String getCodigo() {
-        return codigo;
-    }
+    // --- Getters e Setters ---
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
+    public int getId() { return id; } // Getter para o novo ID
 
-    public LocalDateTime getData() {
-        return data;
-    }
+    public String getCodigo() { return codigo; }
+    public void setCodigo(String codigo) { this.codigo = codigo; }
 
-    public void setData(LocalDateTime data) {
-        this.data = data;
-    }
+    public LocalDateTime getDataAbertura() { return dataAbertura; } // Getter para a data de abertura
+    public void setDataAbertura(LocalDateTime dataAbertura) { this.dataAbertura = dataAbertura; }
 
-    public double getPrecoTotal() {
-        return precoTotal;
-    }
+    public BigDecimal getPrecoTotal() { return precoTotal; } // Getter para BigDecimal
+    // setPrecoTotal (direto) NÃO é recomendado, pois o preço é CALCULADO.
+    // Pode haver um setPrecoTotal interno para o cálculo, mas não público.
 
-    public void setPrecoTotal(double precoTotal) {
-        this.precoTotal = precoTotal;
-    }
+    public int getIdVeiculo() { return idVeiculo; } // Getter para ID do Veículo
+    public void setIdVeiculo(int idVeiculo) { this.idVeiculo = idVeiculo; }
 
-    public Veiculo getVeiculo() {
-        return veiculo;
-    }
+    public int getIdCliente() { return idCliente; } // Getter para ID do Cliente
+    public void setIdCliente(int idCliente) { this.idCliente = idCliente; }
 
-    public void setVeiculo(Veiculo veiculo) {
-        this.veiculo = veiculo;
-    }
+    public int getIdMecanicoResponsavel() { return idMecanicoResponsavel; } // Getter para ID do Mecânico
+    public void setIdMecanicoResponsavel(int idMecanicoResponsavel) { this.idMecanicoResponsavel = idMecanicoResponsavel; }
 
-    public Cliente getCliente() {
-        return cliente;
-    }
+    public StatusOrdem getStatus() { return status; }
+    // setStatus SEM notificação (para uso interno)
+    public void setStatus(StatusOrdem status) { this.status = status; }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public Mecanico getMecanicoResponsavel() {
-        return mecanicoResponsavel;
-    }
-
-    public void setMecanicoResponsavel(Mecanico mecanicoResponsavel) {
-        this.mecanicoResponsavel = mecanicoResponsavel;
-    }
-
-    public StatusOrdem getStatus() {
-        return status;
-    }
-    /**
-     * Altera o status sem notificar observadores.
-     * (Para uso interno ou quanod notificações não são desejadas)
-     * @param status  novo status
-     */
-    public void setStatus(StatusOrdem status) {
-        this.status = status;
-    }
-    
     public List<Servico> getServicos() {
-        //
-        return new ArrayList<>(servicos);
+        return new ArrayList<>(servicos); // Retorna uma cópia para encapsulamento
     }
 
+    // --- Métodos de Comportamento ---
+
     /**
-     * Calcula o preço total somando os serviços
-     * @return retorna o valor total dos serviços realizados
+     * Calcula o preço total da Ordem de Serviço somando os preços de todos os serviços e peças.
+     * Atualiza o atributo precoTotal da OS.
+     * @return O valor total calculado (BigDecimal).
      */
-    public double calcularTotal() {
+    public BigDecimal calcularTotal() {
+        // Usa BigDecimal para somar os preços dos serviços com precisão
         this.precoTotal = servicos.stream()
-                .mapToDouble(Servico::getPreco)
-                .sum(); 
+                                  .map(Servico::getPreco) // Assume que Servico.getPreco() retorna BigDecimal
+                                  .reduce(BigDecimal.ZERO, BigDecimal::add); // Soma BigDecimals
         return this.precoTotal;
     }
 
     /**
-     * Adiciona serviços a serem realizados na ordem de serviço
-     *
-     * @param servico serviço que será adicionado
+     * Adiciona um serviço a ser realizado nesta Ordem de Serviço.
+     * Após adicionar, recalcula o preço total.
+     * @param servico O serviço a ser adicionado.
      */
     public void adicionarServico(Servico servico) {
-        servicos.add(servico);
-        calcularTotal();
-        System.out.println("[LOG:OrdemServico " + this.codigo + "] Serviço '" + servico.getDescricao() + "' adicionado.");
-    }
-
-    /**
-     * remove servico
-     *
-     * @param servico servico que será removido
-     */
-    public void removerServico(Servico servico) {
-        servicos.remove(servico);
-        calcularTotal();
-        System.out.println("[OrdemServico " + this.codigo + "] Serviço '" + servico.getDescricao() + "' removido.");
-    }
-
-    /**
-     * Altera o status da ordem de serviço e notifica os observadores.
-     * @param novoStatus status para qual será atualizado
-     */
-    public void alterarStatus(StatusOrdem novoStatus) { 
-        // Este método agora DISPARA a notificação
-        if (this.status != novoStatus) { 
-        // Notifica apenas se o status realmente mudou
-            this.status = novoStatus;
-            System.out.println("\n[LOG:OrdemServico " + this.codigo + "] Status alterado para -> " + novoStatus);
-            notificarObservadores(); 
-            // CHAMA OS OBSERVADORES AQUI!
-        } else {
-            System.out.println("\n[LOG:OrdemServico " + this.codigo + "] Status já é " + novoStatus + ". Nenhuma alteração/notificação.");
+        if (servico != null) {
+            servicos.add(servico);
+            calcularTotal(); // Recalcula o total após adicionar
+            System.out.println("[LOG:OrdemServico " + this.codigo + "] Serviço '" + servico.getDescricao() + "' adicionado. Novo total: " + this.precoTotal);
         }
     }
-    
+
+    /**
+     * Remove um serviço desta Ordem de Serviço.
+     * Após remover, recalcula o preço total.
+     * @param servico O serviço a ser removido.
+     * @return true se o serviço foi removido, false caso contrário.
+     */
+    public boolean removerServico(Servico servico) {
+        boolean removido = servicos.remove(servico);
+        if (removido) {
+            calcularTotal(); // Recalcula o total após remover
+            System.out.println("[LOG:OrdemServico " + this.codigo + "] Serviço '" + servico.getDescricao() + "' removido. Novo total: " + this.precoTotal);
+        }
+        return removido;
+    }
+
+    /**
+     * Altera o status da ordem de serviço e notifica todos os observadores registrados.
+     * Notifica apenas se o status realmente mudou.
+     * @param novoStatus O novo status para o qual a ordem será atualizada.
+     */
+    public void alterarStatus(StatusOrdem novoStatus) {
+        if (this.status != novoStatus) {
+            this.status = novoStatus;
+            System.out.println("\n[LOG:OrdemServico " + this.codigo + "] Status alterado para -> " + novoStatus.getDescricao()); // Usa getDescricao()
+            notificarObservadores(); // CHAMA OS OBSERVADORES AQUI!
+        } else {
+            System.out.println("\n[LOG:OrdemServico " + this.codigo + "] Status já é " + novoStatus.getDescricao() + ". Nenhuma alteração/notificação.");
+        }
+    }
+
     @Override
     public String toString() {
+        String servicosResumo = servicos.isEmpty() ? "Nenhum" : servicos.size() + " serviço(s)";
         return "OrdemServico{" +
-                "codigo='" + codigo + '\'' +
-                ", status=" + status +
-                ", precoTotal=" + precoTotal +
-                ", veiculo=" + (veiculo != null ? veiculo.getPlaca() : "N/A") +
-                ", cliente=" + (cliente != null ? cliente.getNome() : "N/A") +
-                ", qtdServicos=" + servicos.size() +
-                '}';
+               "ID=" + id +
+               ", Código='" + codigo + '\'' +
+               ", Status='" + status.getDescricao() + '\'' + // Usando getDescricao()
+               ", Preço Total=" + precoTotal +
+               ", Veículo ID=" + idVeiculo +
+               ", Cliente ID=" + idCliente +
+               ", Mecânico ID=" + idMecanicoResponsavel +
+               ", Serviços=" + servicosResumo +
+               ", Data Abertura=" + dataAbertura.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) +
+               '}';
     }
 }

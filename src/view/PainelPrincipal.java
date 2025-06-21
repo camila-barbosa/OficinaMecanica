@@ -4,6 +4,8 @@
  */
 package view;
 
+import view.componentes.CompPonto;
+import view.menus.MenuGerente;
 import java.util.Scanner;
 import models.Usuario;
 import repository.UsuarioCRUD;
@@ -21,7 +23,7 @@ public class PainelPrincipal {
     private RegistroPontoService pontoService;
     private Scanner scanner;
 
-    private ComponentePonto componentePonto;
+    private CompPonto componentePonto;
     // Futuramente: ComponenteOrdemServicoEspecializada componenteOSEspecializada;
 
     /**
@@ -40,7 +42,7 @@ public class PainelPrincipal {
         this.usuarioLogado = UserSession.getInstance().getLoggedInUser();
         
         // Inicializa os componentes visuais que fazem parte do painel
-        this.componentePonto = new ComponentePonto(pontoService, scanner);
+        this.componentePonto = new CompPonto(pontoService, scanner);
         // Futuramente: this.componenteOSEspecializada = new ComponenteOrdemServicoEspecializada(osService, scanner);
 
         // Verificação de segurança: se por algum motivo o usuário não estiver logado, encerra.
@@ -141,14 +143,19 @@ public class PainelPrincipal {
 
         switch (usuarioLogado.getTipo()) { // O switch que decide qual menu/lógica de processamento chamar
             case ATENDENTE:
-                // Chamaria o MenuAtendente (futuramente)
+                // Aqui você chamará o MenuAtendente real (futuramente)
                 // Exemplo: new MenuAtendente(usuarioCRUD, scanner, agendamentoService, osService).exibirMenu();
-                processarMenuAtendente(opcao); // Por enquanto, usa o método interno para placeholders
+                // Por enquanto, apenas um placeholder:
+                System.out.println("Funcionalidade de Gerenciamento para Atendente ainda não implementada.");
+                // Se a opção for válida, mas não implementada, pode mostrar uma mensagem ou o System.exit(0)
+                // switch(opcao) { case 1: ...; default: System.out.println("Opção inválida ou não implementada para Atendente."); }
                 break;
             case MECANICO:
-                // Chamaria o MenuMecanico (futuramente)
+                // Aqui você chamará o MenuMecanico real (futuramente)
                 // Exemplo: new MenuMecanico(usuarioCRUD, scanner, osService).exibirMenu();
-                processarMenuMecanico(opcao); // Por enquanto, usa o método interno para placeholders
+                // Por enquanto, apenas um placeholder:
+                System.out.println("Funcionalidade de Gerenciamento para Mecânico ainda não implementada.");
+                // switch(opcao) { case 1: ...; default: System.out.println("Opção inválida ou não implementada para Mecânico."); }
                 break;
             case GERENTE:
                 // Chama o MenuGerente real que já existe e tem seu próprio loop
@@ -160,29 +167,4 @@ public class PainelPrincipal {
                 break;
         }
     }
-
-    // --- MÉTODOS PARA PROCESSAMENTO TEMPORÁRIO DE MENUS (REMOVER QUANDO CRIAR CLASSES DE MENU DEDICADAS) ---
-    // Estes métodos serão movidos para as respectivas classes MenuAtendente, MenuMecanico, etc.
-
-    private void processarMenuAtendente(int opcao) {
-        switch (opcao) {
-            case 1: System.out.println("Funcionalidade 'Gerenciar Agendamentos' (Atendente) ainda não implementada."); break;
-            case 2: System.out.println("Funcionalidade 'Gerar Nova Ordem de Serviço' (Atendente) ainda não implementada."); break;
-            case 3: System.out.println("Funcionalidade 'Processar Pagamento' (Atendente) ainda não implementada."); break;
-            default: System.out.println("Opção inválida para Atendente."); break;
-        }
-    }
-
-    private void processarMenuMecanico(int opcao) {
-        switch (opcao) {
-            case 1: System.out.println("Funcionalidade 'Visualizar Minhas Ordens de Serviço' (Mecânico) ainda não implementada."); break;
-            case 2: System.out.println("Funcionalidade 'Registrar Diagnóstico' (Mecânico) ainda não implementada."); break;
-            case 3: System.out.println("Funcionalidade 'Registrar Execução de Serviço' (Mecânico) ainda não implementada."); break;
-            default: System.out.println("Opção inválida para Mecânico."); break;
-        }
-    }
-
-    // O método processarMenuGerente original foi substituído por uma chamada direta a MenuGerente
-    // no processarOpcaoMenu, então este método específico pode ser removido ou não existiria mais.
-    // Não listamos ele aqui, pois a chamada direta o substituiu.
 }

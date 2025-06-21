@@ -13,7 +13,9 @@ import java.util.List;
  * @author barbo
  */
 public class Cliente {
+    public static int proximoId = 1; 
 
+    private int id;
     private String nome;
     private String telefone;
     private String email;
@@ -21,6 +23,7 @@ public class Cliente {
 
     //construtor
     public Cliente(String nome, String telefone, String email) {
+        this.id = proximoId++;
         this.nome = nome;
         this.telefone = telefone;
         this.email = email;
@@ -28,6 +31,11 @@ public class Cliente {
     }
 
     //getters e setters
+    
+    public int getId() { 
+        return id;
+    }
+    
     public String getNome() {
         return nome;
     }
